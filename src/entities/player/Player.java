@@ -1,6 +1,7 @@
 package entities.player;
 
 import entities.Entity;
+import entities.Library;
 import entities.files.Album;
 import entities.files.AudioFile;
 import entities.files.Episode;
@@ -25,6 +26,7 @@ public class Player {
     private ArrayList<Integer> queueIndexes = new ArrayList<>();
 
     private AudioFile activeFile;
+    private AudioFile songBeforeBreak;
     private ArrayList<AudioFile> queue = new ArrayList<>();
     private int queueIndex = 0;
 
@@ -33,6 +35,8 @@ public class Player {
 
     private int repeatThis = 0;
     private int repeatAllCount = 0;
+
+    boolean hasAd = false;
 
     public Player() {
     }
@@ -185,5 +189,11 @@ public class Player {
             current += queue.get(queueIndexes.get(i)).getDuration();
         }
         return currentTimestamp - current;
+    }
+
+    public void setAdBreak() {
+        Song adBreak = Library.getInstance().getSongByName("adBreak");
+        songBeforeBreak = activeFile;
+        hasAd = true;
     }
 }

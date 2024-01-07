@@ -8,6 +8,7 @@ import entities.users.specifics.Merch;
 import entities.pages.ArtistPage;
 import lombok.Getter;
 import lombok.Setter;
+import notifications.Publisher;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,8 @@ public class Artist extends User {
     private List<Album> albums = new ArrayList<>();
     private List<Event> events = new ArrayList<>();
     private List<Merch> merch = new ArrayList<>();
+
+    private Publisher publisher = new Publisher();
 
     public Artist(final String username, final int age, final String city, final String type) {
         super(username, age, city, type);

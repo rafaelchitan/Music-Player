@@ -15,13 +15,16 @@ import entities.users.specifics.Merch;
 import fileio.input.UserInput;
 import lombok.Getter;
 import lombok.Setter;
+import notifications.NotificationTemplate;
+import notifications.Publisher;
+import notifications.Subscriber;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 @Setter @Getter
-public class User implements Entity {
+public class User implements Entity, Subscriber {
     protected String username;
     protected int age;
     protected String city;
@@ -51,6 +54,7 @@ public class User implements Entity {
     protected Page currentPage = publicPage;
 
     protected double money = 0.0;
+    protected ArrayList<NotificationTemplate> notifications = new ArrayList<>();
 
     public User(final String username) {
         this.username = username;
@@ -156,6 +160,14 @@ public class User implements Entity {
     }
 
     public Announcement getAnnouncementByName(final String podcastName) {
+        return null;
+    }
+
+    public void update(final NotificationTemplate notification) {
+        notifications.add(notification);
+    }
+
+    public Publisher getPublisher() {
         return null;
     }
 }

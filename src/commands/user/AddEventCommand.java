@@ -7,6 +7,7 @@ import entities.users.specifics.Event;
 import entities.Library;
 import fileio.input.CommandInput;
 import fileio.output.CommandOutput;
+import notifications.NotificationTemplate;
 
 public class AddEventCommand extends Command {
     private String description;
@@ -69,6 +70,10 @@ public class AddEventCommand extends Command {
                 .getUserByName(username), name, date, description);
         Library.getInstance().getUserByName(username).getEvents().add(event);
         Library.getInstance().getEvents().add(event);
+
+        Library.getInstance().getUserByName(username).getPublisher()
+                .notify(new NotificationTemplate("New Event",
+                        "New Event from " + username + "."));
 
         return new CommandOutput(this, username
                 + " has added new event successfully.")

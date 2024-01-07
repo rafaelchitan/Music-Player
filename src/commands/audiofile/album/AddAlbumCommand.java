@@ -7,6 +7,7 @@ import entities.Library;
 import fileio.input.CommandInput;
 import fileio.input.SongInput;
 import fileio.output.CommandOutput;
+import notifications.NotificationTemplate;
 
 import java.util.ArrayList;
 
@@ -56,6 +57,9 @@ public class AddAlbumCommand extends Command {
         Album album = new Album(name, artist, releaseYear, description, songInputs);
         Library.getInstance().getAlbums().add(album);
         Library.getInstance().getUserByName(username).getAlbums().add(album);
+        Library.getInstance().getUserByName(username)
+                .getPublisher()
+                .notify(new NotificationTemplate("New Album", "New Album from " + username + "."));
         return new CommandOutput(this, username
                 + " has added new album successfully.").convertToJSON();
     }

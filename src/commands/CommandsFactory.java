@@ -14,6 +14,8 @@ import commands.audiofile.podcast.ShowPodcastsCommand;
 import commands.monetization.AdBreakCommand;
 import commands.monetization.BuyPremiumCommand;
 import commands.monetization.CancelPremiumCommand;
+import commands.notifications.GetNotificationsCommand;
+import commands.notifications.SubscribeCommand;
 import commands.pages.ChangePageCommand;
 import commands.pages.PrintCurrentPageCommand;
 import commands.player.LikeCommand;
@@ -104,6 +106,8 @@ public final class CommandsFactory {
             case "buyPremium" -> new BuyPremiumCommand(command);
             case "cancelPremium" -> new CancelPremiumCommand(command);
             case "adBreak" -> new AdBreakCommand(command);
+            case "subscribe" -> new SubscribeCommand(command);
+            case "getNotifications" -> new GetNotificationsCommand(command);
             default -> null;
         };
     }

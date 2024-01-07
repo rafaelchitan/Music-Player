@@ -51,10 +51,8 @@ public class CancelPremiumCommand extends Command {
             int listens = song.getPremiumListenByUser(user);
             if (listens != 0) {
                 song.setMoney(song.getMoney() + (double) 1000000 * listens / totalListens);
-                System.out.println(user.getName() + " " + song.getName() + " " + (double) 1000000 * listens / totalListens);
             }
         }
-        System.out.println(user.getName() + " " + totalListens);
 
         for (Map.Entry<String, Integer> entry : listenedArtists.entrySet()) {
             User artist = Library.getInstance().getUserByName(entry.getKey());

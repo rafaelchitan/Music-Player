@@ -5,6 +5,7 @@ import entities.files.Podcast;
 import entities.pages.HostPage;
 import lombok.Getter;
 import lombok.Setter;
+import notifications.Publisher;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,8 @@ import java.util.List;
 public class Host extends User {
     private List<Podcast> podcasts = new ArrayList<>();
     private List<Announcement> announcements = new ArrayList<>();
+
+    private Publisher publisher = new Publisher();
 
     public Host(final String username, final int age, final String city, final String type) {
         super(username, age, city, type);

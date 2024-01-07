@@ -6,6 +6,7 @@ import entities.Library;
 import entities.users.specifics.Merch;
 import fileio.input.CommandInput;
 import fileio.output.CommandOutput;
+import notifications.NotificationTemplate;
 
 public class AddMerchCommand extends Command {
     private String name;
@@ -45,6 +46,10 @@ public class AddMerchCommand extends Command {
 
         Library.getInstance().getUserByName(username).getMerch()
                 .add(new Merch(name, price, description));
+
+        Library.getInstance().getUserByName(username).getPublisher()
+                .notify(new NotificationTemplate("New Merchandise",
+                        "New Merchandise from " + username + "."));
 
         return new CommandOutput(this, username
                 + " has added new merchandise successfully.").convertToJSON();
