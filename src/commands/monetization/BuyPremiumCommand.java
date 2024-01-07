@@ -25,6 +25,7 @@ public class BuyPremiumCommand extends Command {
         }
 
         user.setPremium(true);
+        user.setPremiumStart(timestamp);
         return new CommandOutput(this, username + " bought the subscription successfully.").convertToJSON();
     }
 }

@@ -44,6 +44,8 @@ public class User implements Entity {
     protected boolean isPremium = false;
     protected boolean isFake = false;
 
+    protected int premiumStart = 0;
+
     protected Page publicPage = new HomePage(this);
     protected Page likedContentPage = new LikedContentPage(this);
     protected Page currentPage = publicPage;

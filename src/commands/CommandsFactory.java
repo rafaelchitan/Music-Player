@@ -11,6 +11,7 @@ import commands.audiofile.playlist.FollowCommand;
 import commands.audiofile.podcast.AddPodcastCommand;
 import commands.audiofile.podcast.RemovePodcastCommand;
 import commands.audiofile.podcast.ShowPodcastsCommand;
+import commands.monetization.AdBreakCommand;
 import commands.monetization.BuyPremiumCommand;
 import commands.monetization.CancelPremiumCommand;
 import commands.pages.ChangePageCommand;
@@ -102,6 +103,7 @@ public final class CommandsFactory {
             case "wrapped" -> new WrappedCommand(command);
             case "buyPremium" -> new BuyPremiumCommand(command);
             case "cancelPremium" -> new CancelPremiumCommand(command);
+            case "adBreak" -> new AdBreakCommand(command);
             default -> null;
         };
     }

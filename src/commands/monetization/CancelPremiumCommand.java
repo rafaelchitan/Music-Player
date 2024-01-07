@@ -8,6 +8,7 @@ import entities.users.User;
 import fileio.input.CommandInput;
 import fileio.output.CommandOutput;
 
+import java.io.Console;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,23 +39,33 @@ public class CancelPremiumCommand extends Command {
         HashMap<String, Integer> listenedArtists = new HashMap<>();
         int totalListens = 0;
         for (Song song : Library.getInstance().getSongs()) {
-            if (song.getListenByUser(user) != 0) {
-                listenedArtists.put(song.getArtist(), listenedArtists.getOrDefault(song.getArtist(), 0) + song.getListenByUser(user));
-                totalListens += song.getListenByUser(user);
+            int listens = song.getPremiumListenByUser(user);
+            if (listens != 0) {
+                listenedArtists.put(song.getArtist(),
+                        listenedArtists.getOrDefault(song.getArtist(), 0) + listens);
+                totalListens += listens;
             }
         }
 
         for (Song song : Library.getInstance().getSongs()) {
-            if (song.getListenByUser(user) != 0) {
-                song.setMoney(song.getMoney() + (double) 1000000 * song.getListenByUser(user) / totalListens);
+            int listens = song.getPremiumListenByUser(user);
+            if (listens != 0) {
+                song.setMoney(song.getMoney() + (double) 1000000 * listens / totalListens);
+                System.out.println(user.getName() + " " + song.getName() + " " + (double) 1000000 * listens / totalListens);
             }
         }
+        System.out.println(user.getName() + " " + totalListens);
 
         for (Map.Entry<String, Integer> entry : listenedArtists.entrySet()) {
             User artist = Library.getInstance().getUserByName(entry.getKey());
             artist.setMoney(artist.getMoney() + (double) 1000000 * entry.getValue() / totalListens);
         }
 
+        for (Song song : Library.getInstance().getSongs()) {
+            song.getPremiumTimesListened().removeIf(pair -> pair.a.equals(user));
+        }
+
         return new CommandOutput(this, username + " cancelled the subscription successfully.").convertToJSON();
+
     }
 }

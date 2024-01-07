@@ -105,6 +105,9 @@ public class Player {
             for (int i = 0; i < queue.size(); i++) {
                 AudioFile audioFile = queue.get(queueIndexes.get(i));
                 audioFile.addListened(user, initialTimestamp + currentDuration);
+                if (user.isPremium() && user.getPremiumStart() <= initialTimestamp + currentDuration) {
+                    audioFile.premiumAddListened(user, initialTimestamp + currentDuration);
+                }
 
                 currentDuration += audioFile.getDuration();
                 addedDuration += audioFile.getDuration();

@@ -22,6 +22,7 @@ public class Song extends AudioFile implements Entity {
     private int likeNumber = 0;
     private double money = 0;
     protected HashSet<Pair<User, Integer>> timesListened = new HashSet<>();
+    protected HashSet<Pair<User, Integer>> premiumTimesListened = new HashSet<>();
 
     public Song(final SongInput songInput) {
         this.name = songInput.getName();
@@ -45,11 +46,24 @@ public class Song extends AudioFile implements Entity {
         timesListened.add(new Pair<>(user, timestamp));
     }
 
+    public void premiumAddListened(User user, int timestamp) {
+        premiumTimesListened.add(new Pair<>(user, timestamp));
+    }
+
     public int getListenByUser(User user) {
         if (user == null)
             return timesListened.size();
 
         return (int) timesListened.stream()
+                .filter(pair -> pair.a.equals(user))
+                .count();
+    }
+
+    public int getPremiumListenByUser(User user) {
+        if (user == null)
+            return premiumTimesListened.size();
+
+        return (int) premiumTimesListened.stream()
                 .filter(pair -> pair.a.equals(user))
                 .count();
     }
