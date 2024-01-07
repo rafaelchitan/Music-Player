@@ -38,6 +38,8 @@ public class User implements Entity, Subscriber {
     protected List<Playlist> followedPlaylists = new ArrayList<>();
     protected List<Album> albums = new ArrayList<>();
 
+    protected List<Merch> boughtMerch = new ArrayList<>();
+
     protected HashMap<Podcast, Integer> podcastHistory = new HashMap<>();
 
     protected String status = "online";
@@ -53,7 +55,8 @@ public class User implements Entity, Subscriber {
     protected Page likedContentPage = new LikedContentPage(this);
     protected Page currentPage = publicPage;
 
-    protected double money = 0.0;
+    protected double songMoney = 0.0;
+    protected double merchMoney = 0.0;
     protected ArrayList<NotificationTemplate> notifications = new ArrayList<>();
 
     public User(final String username) {

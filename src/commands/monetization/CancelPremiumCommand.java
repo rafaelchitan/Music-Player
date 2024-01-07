@@ -8,7 +8,6 @@ import entities.users.User;
 import fileio.input.CommandInput;
 import fileio.output.CommandOutput;
 
-import java.io.Console;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -56,7 +55,7 @@ public class CancelPremiumCommand extends Command {
 
         for (Map.Entry<String, Integer> entry : listenedArtists.entrySet()) {
             User artist = Library.getInstance().getUserByName(entry.getKey());
-            artist.setMoney(artist.getMoney() + (double) 1000000 * entry.getValue() / totalListens);
+            artist.setSongMoney(artist.getSongMoney() + (double) 1000000 * entry.getValue() / totalListens);
         }
 
         for (Song song : Library.getInstance().getSongs()) {
