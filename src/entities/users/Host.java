@@ -1,5 +1,8 @@
 package entities.users;
 
+import entities.Library;
+import entities.files.Episode;
+import entities.files.Song;
 import entities.users.specifics.Announcement;
 import entities.files.Podcast;
 import entities.pages.HostPage;
@@ -35,5 +38,17 @@ public class Host extends User {
                 .filter(podcast -> podcast.getName().equals(announcementName))
                 .findFirst()
                 .orElse(null);
+    }
+
+    public int getListenByUser(User user) {
+        int times = 0;
+        for (Podcast podcast : Library.getInstance().getPodcasts()) {
+            if (podcast.getOwner().equals(this.getName())) {
+                for (Episode episode : podcast.getEpisodes()) {
+                    times += episode.getListenByUser(user);
+                }
+            }
+        }
+        return times;
     }
 }

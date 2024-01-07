@@ -3,6 +3,8 @@ package commands.pages;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import commands.Command;
 import entities.Library;
+import entities.files.Podcast;
+import entities.files.Song;
 import entities.users.User;
 import fileio.input.CommandInput;
 import fileio.output.CommandOutput;
@@ -25,10 +27,17 @@ public class ChangePageCommand extends Command {
     public ObjectNode execute() {
 
         User user = Library.getInstance().getUserByName(username);
+        user.getPlayer().update(user, timestamp);
 
         switch (nextPage) {
-            case "Home" -> user.setCurrentPage(user.getPublicPage());
-            case "LikedContent" -> user.setCurrentPage(user.getLikedContentPage());
+            case "Home" -> user.addPage(user.getPublicPage());
+            case "LikedContent" -> user.addPage(user.getLikedContentPage());
+            case "Artist" -> user.addPage(Library.getInstance()
+                    .getUserByName(((Song) user.getPlayer().getActiveFile()).getArtist())
+                    .getPublicPage());
+            case "Host" -> user.addPage(Library.getInstance()
+                    .getUserByName(((Podcast) user.getPlayer().getCurrentFile()).getOwner())
+                    .getPublicPage());
             default -> {
                 return new CommandOutput(this,  username
                     + " is trying to access a non-existent page.").convertToJSON(); }

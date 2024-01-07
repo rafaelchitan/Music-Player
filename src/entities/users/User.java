@@ -54,6 +54,7 @@ public class User implements Entity, Subscriber {
     protected Page publicPage = new HomePage(this);
     protected Page likedContentPage = new LikedContentPage(this);
     protected Page currentPage = publicPage;
+    protected List<Page> pageHistory = new ArrayList<>();
 
     protected double songMoney = 0.0;
     protected double merchMoney = 0.0;
@@ -61,12 +62,14 @@ public class User implements Entity, Subscriber {
 
     public User(final String username) {
         this.username = username;
+        pageHistory.add(currentPage);
     }
 
     public User(final UserInput userInput) {
         username = userInput.getUsername();
         age = userInput.getAge();
         city = userInput.getCity();
+        pageHistory.add(currentPage);
     }
 
     public User(final String username, final int age, final String city, final String type) {
@@ -74,6 +77,7 @@ public class User implements Entity, Subscriber {
         this.age = age;
         this.city = city;
         this.type = type;
+        pageHistory.add(currentPage);
     }
 
     /**
@@ -172,5 +176,40 @@ public class User implements Entity, Subscriber {
 
     public Publisher getPublisher() {
         return null;
+    }
+
+    public void addPage(Page nextPage) {
+        int index = pageHistory.indexOf(currentPage);
+        pageHistory = pageHistory.subList(0, index + 1);
+        pageHistory.add(nextPage);
+        currentPage = nextPage;
+    }
+
+    public boolean goNextPage() {
+        int index = pageHistory.indexOf(currentPage);
+        if (index == pageHistory.size() - 1) {
+            return false;
+        }
+
+        currentPage = pageHistory.get(index + 1);
+        return true;
+    }
+
+    public boolean goPreviousPage() {
+        int index = pageHistory.indexOf(currentPage);
+        if (index == 0) {
+            return false;
+        }
+
+        currentPage = pageHistory.get(index - 1);
+        return true;
+    }
+
+    public void updateSongsReccomandations(final Song song) {
+        ((HomePage) publicPage).getSongReccomandations().add(song);
+    }
+
+    public void updatePlaylistReccomandations(Playlist playlist) {
+        ((HomePage) publicPage).getPlaylistReccomandations().add(playlist);
     }
 }

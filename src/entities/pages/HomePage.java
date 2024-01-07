@@ -4,6 +4,7 @@ import constants.Constants;
 import entities.files.Playlist;
 import entities.files.Song;
 import entities.users.User;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -13,6 +14,12 @@ public class HomePage extends Page {
 
     private List<Song> likedSongs;
     private List<Playlist> followedPlaylists;
+
+    @Getter
+    private List<Song> songReccomandations = new ArrayList<>();
+
+    @Getter
+    private List<Playlist> playlistReccomandations = new ArrayList<>();
 
     public HomePage(final User user) {
         this.user = user;
@@ -69,6 +76,30 @@ public class HomePage extends Page {
         toReplace = false;
         stringBuilder.append("Followed playlists:\n\t[");
         for (Playlist playlist : followedPlaylists) {
+            toReplace = true;
+            stringBuilder.append(playlist.getName()).append(", ");
+        }
+        if (toReplace) {
+            stringBuilder.replace(stringBuilder.length() - 2, stringBuilder.length(), "]");
+        } else {
+            stringBuilder.append("]\n\n");
+        }
+
+        toReplace = false;
+        stringBuilder.append("Song recommendations:\n\t[");
+        for (Song song : songReccomandations) {
+            toReplace = true;
+            stringBuilder.append(song.getName()).append(", ");
+        }
+        if (toReplace) {
+            stringBuilder.replace(stringBuilder.length() - 2, stringBuilder.length(), "]");
+        } else {
+            stringBuilder.append("]\n\n");
+        }
+
+        toReplace = false;
+        stringBuilder.append("Playlists recommendations:\n\t[");
+        for (Playlist playlist : playlistReccomandations) {
             toReplace = true;
             stringBuilder.append(playlist.getName()).append(", ");
         }

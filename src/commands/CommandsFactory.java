@@ -18,6 +18,8 @@ import commands.monetization.CancelPremiumCommand;
 import commands.notifications.GetNotificationsCommand;
 import commands.notifications.SubscribeCommand;
 import commands.pages.ChangePageCommand;
+import commands.pages.NextPageCommand;
+import commands.pages.PreviousPageCommand;
 import commands.pages.PrintCurrentPageCommand;
 import commands.player.LikeCommand;
 import commands.player.NextPrevCommand;
@@ -27,6 +29,7 @@ import commands.player.ShuffleCommand;
 import commands.player.StatusCommand;
 import commands.player.ForwardBackwardCommand;
 import commands.player.LoadCommand;
+import commands.recommandations.UpdateRecommendationsCommand;
 import commands.searchbar.Search;
 import commands.searchbar.Select;
 import commands.statistics.*;
@@ -101,6 +104,9 @@ public final class CommandsFactory {
             case "getNotifications" -> new GetNotificationsCommand(command);
             case "buyMerch" -> new BuyMerchCommand(command);
             case "seeMerch" -> new SeeMerchCommand(command);
+            case "nextPage" -> new NextPageCommand(command);
+            case "previousPage" -> new PreviousPageCommand(command);
+            case "updateRecommendations" -> new UpdateRecommendationsCommand(command);
             default -> null;
         };
     }

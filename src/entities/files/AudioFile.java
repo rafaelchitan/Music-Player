@@ -19,15 +19,17 @@ public abstract class AudioFile {
 
     public abstract void addListened(User user, int timestamp);
 
-    public abstract void premiumAddListened(User user, int timestamp);
+    public void premiumAddListened(User user, int timestamp) { }
 
     public abstract HashSet<?> getTimesListened();
 
-    public abstract HashSet<?> getPremiumTimesListened();
-
-    public abstract void setPremiumTimesListened(HashSet<Pair<User, Integer>> timesListened);
+    public HashSet<?> getPremiumTimesListened() {
+        return null;
+    }
 
     public abstract int getListenByUser(User user);
 
-    public abstract int getPremiumListenByUser(User user);
+    public int getPremiumListenByUser(User user) {
+        return 0;
+    }
 }

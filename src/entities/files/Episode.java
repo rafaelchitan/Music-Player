@@ -13,7 +13,6 @@ import java.util.HashSet;
 public class Episode extends AudioFile implements Entity {
     private String description;
     protected HashSet<Pair<User, Integer>> timesListened = new HashSet<>();
-    protected HashSet<Pair<User, Integer>> premiumTimesListened = new HashSet<>();
 
     public Episode(final EpisodeInput episodeInput) {
         this.name = episodeInput.getName();
@@ -32,24 +31,10 @@ public class Episode extends AudioFile implements Entity {
         timesListened.add(new Pair<>(user, timestamp));
     }
 
-    public void premiumAddListened(User user, int timestamp) {
-        premiumTimesListened.add(new Pair<>(user, timestamp));
-    }
-
     public int getListenByUser(User user) {
         int times = 0;
         for (Pair<User, Integer> pair : timesListened) {
-            if (pair.a.equals(user)) {
-                times++;
-            }
-        }
-        return times;
-    }
-
-    public int getPremiumListenByUser(User user) {
-        int times = 0;
-        for (Pair<User, Integer> pair : premiumTimesListened) {
-            if (pair.a.equals(user)) {
+            if (pair.a.equals(user) || user == null) {
                 times++;
             }
         }

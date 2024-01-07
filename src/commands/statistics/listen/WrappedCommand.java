@@ -6,6 +6,7 @@ import entities.Entity;
 import entities.Library;
 import entities.files.*;
 import entities.users.Artist;
+import entities.users.Host;
 import entities.users.User;
 import fileio.input.CommandInput;
 import fileio.output.WrappedOutput;
@@ -112,16 +113,48 @@ public class WrappedCommand extends Command {
         return output.convertToJSON();
     }
 
+    public ObjectNode executeHost(Host host) {
+        for (User user : Library.getInstance().getUsers().stream()
+                .filter(u -> u.getType().equals("user"))
+                .toArray(User[]::new)) {
+            user.getPlayer().update(user, timestamp);
+        }
+        WrappedOutput output = new WrappedOutput(this);
+
+        HashMap<String, Integer> listenedEpisodes = new HashMap<>();
+        for (Podcast podcast : Library.getInstance().getPodcasts()) {
+            if (podcast.getOwner().equals(host.getName())) {
+                for (Episode episode : podcast.getEpisodes()) {
+                    if (episode.getListenByUser(null) != 0) {
+                        listenedEpisodes.put(episode.getName(),
+                                listenedEpisodes.getOrDefault(episode.getName(), 0)
+                                        + episode.getListenByUser(null));
+                    }
+                }
+            }
+        }
+        output.addString("topEpisodes", listenedEpisodes);
+
+        int listeners = 0;
+        for (User user : Library.getInstance().getUsers()) {
+            if (user.getType().equals("user") && host.getListenByUser(user) != 0) {
+                listeners++;
+            }
+        }
+        output.addField("listeners", listeners);
+
+        return output.convertToJSON();
+    }
+
     @Override
     public ObjectNode execute() {
         User user = Library.getInstance().getUserByName(username);
 
-        if (user.getType().equals("user")) {
-            return executeUser(user);
-        } else if (user.getType().equals("artist")) {
-            return executeArtist((Artist) user);
-        } else {
-            return null;
-        }
+        return switch (user.getType()) {
+            case "user" -> executeUser(user);
+            case "artist" -> executeArtist((Artist) user);
+            case "host" -> executeHost((Host) user);
+            default -> null;
+        };
     }
 }
