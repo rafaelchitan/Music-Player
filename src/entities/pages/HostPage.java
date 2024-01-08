@@ -68,9 +68,9 @@ public class HostPage extends Page {
         }
 
         if (toReplace) {
-            stringBuilder.replace(stringBuilder.length() - 2, stringBuilder.length(), "\n]");
+            stringBuilder.replace(stringBuilder.length() - 2, stringBuilder.length(), "]");
         } else {
-            stringBuilder.append("\n]");
+            stringBuilder.append("]");
         }
 
         return stringBuilder.toString();

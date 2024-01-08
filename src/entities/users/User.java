@@ -31,6 +31,7 @@ public class User implements Entity, Subscriber {
 
     protected List<Entity> searchbarResults;
     protected Entity selectedFile;
+    protected Entity lastRecommendation;
     protected Player player = new Player();
 
     protected List<Song> likedSongs = new ArrayList<>();
@@ -55,6 +56,7 @@ public class User implements Entity, Subscriber {
     protected Page likedContentPage = new LikedContentPage(this);
     protected Page currentPage = publicPage;
     protected List<Page> pageHistory = new ArrayList<>();
+    int historyIndex = -1;
 
     protected double songMoney = 0.0;
     protected double merchMoney = 0.0;
@@ -179,29 +181,26 @@ public class User implements Entity, Subscriber {
     }
 
     public void addPage(Page nextPage) {
-        int index = pageHistory.indexOf(currentPage);
-        pageHistory = pageHistory.subList(0, index + 1);
         pageHistory.add(nextPage);
         currentPage = nextPage;
+        historyIndex = pageHistory.size() - 1;
     }
 
     public boolean goNextPage() {
-        int index = pageHistory.indexOf(currentPage);
-        if (index == pageHistory.size() - 1) {
+        if (historyIndex == pageHistory.size() - 1) {
             return false;
         }
 
-        currentPage = pageHistory.get(index + 1);
+        currentPage = pageHistory.get(++historyIndex);
         return true;
     }
 
     public boolean goPreviousPage() {
-        int index = pageHistory.indexOf(currentPage);
-        if (index == 0) {
+        if (historyIndex == 0) {
             return false;
         }
 
-        currentPage = pageHistory.get(index - 1);
+        currentPage = pageHistory.get(--historyIndex);
         return true;
     }
 

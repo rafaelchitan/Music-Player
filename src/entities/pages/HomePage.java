@@ -92,7 +92,7 @@ public class HomePage extends Page {
             stringBuilder.append(song.getName()).append(", ");
         }
         if (toReplace) {
-            stringBuilder.replace(stringBuilder.length() - 2, stringBuilder.length(), "]");
+            stringBuilder.replace(stringBuilder.length() - 2, stringBuilder.length(), "]\n\n");
         } else {
             stringBuilder.append("]\n\n");
         }

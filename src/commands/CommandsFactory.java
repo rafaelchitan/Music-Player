@@ -21,14 +21,7 @@ import commands.pages.ChangePageCommand;
 import commands.pages.NextPageCommand;
 import commands.pages.PreviousPageCommand;
 import commands.pages.PrintCurrentPageCommand;
-import commands.player.LikeCommand;
-import commands.player.NextPrevCommand;
-import commands.player.PlayPauseCommand;
-import commands.player.RepeatCommand;
-import commands.player.ShuffleCommand;
-import commands.player.StatusCommand;
-import commands.player.ForwardBackwardCommand;
-import commands.player.LoadCommand;
+import commands.player.*;
 import commands.recommandations.UpdateRecommendationsCommand;
 import commands.searchbar.Search;
 import commands.searchbar.Select;
@@ -107,6 +100,7 @@ public final class CommandsFactory {
             case "nextPage" -> new NextPageCommand(command);
             case "previousPage" -> new PreviousPageCommand(command);
             case "updateRecommendations" -> new UpdateRecommendationsCommand(command);
+            case "loadRecommendations" -> new LoadRecommendationsCommand(command);
             default -> null;
         };
     }
