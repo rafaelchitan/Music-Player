@@ -32,10 +32,22 @@ public class WrappedCommand extends Command {
                 listenedArtists.put(song.getArtist(), listenedArtists.getOrDefault(song.getArtist(), 0) + song.getListenByUser(user));
             }
         }
+
+        for (Song song: Library.getInstance().getRemovedSongs()) {
+            if (song.getListenByUser(user) != 0) {
+                listenedArtists.put(song.getArtist(), listenedArtists.getOrDefault(song.getArtist(), 0) + song.getListenByUser(user));
+            }
+        }
         output.addString("topArtists", listenedArtists);
 
         HashMap<String, Integer> listenedGenres = new HashMap<>();
         for (Song song : Library.getInstance().getSongs()) {
+            if (song.getListenByUser(user) != 0) {
+                listenedGenres.put(song.getGenre(), listenedGenres.getOrDefault(song.getGenre(), 0) + song.getListenByUser(user));
+            }
+        }
+
+        for (Song song: Library.getInstance().getRemovedSongs()) {
             if (song.getListenByUser(user) != 0) {
                 listenedGenres.put(song.getGenre(), listenedGenres.getOrDefault(song.getGenre(), 0) + song.getListenByUser(user));
             }
@@ -48,12 +60,24 @@ public class WrappedCommand extends Command {
                 listenedSongs.put(song.getName(), listenedSongs.getOrDefault(song.getName(), 0) + song.getListenByUser(user));
             }
         }
+
+        for (Song song: Library.getInstance().getRemovedSongs()) {
+            if (song.getListenByUser(user) != 0) {
+                listenedSongs.put(song.getName(), listenedSongs.getOrDefault(song.getName(), 0) + song.getListenByUser(user));
+            }
+        }
         output.addString("topSongs", listenedSongs);
 
         HashMap<String, Integer> listenedAlbums = new HashMap<>();
         for (Album album : Library.getInstance().getAlbums()) {
             if (album.getListenByUser(user) != 0) {
                 listenedAlbums.put(album.getName(), listenedAlbums.getOrDefault(album.getName(), 0) + album.getListenByUser(user));
+            }
+        }
+
+        for (Song song: Library.getInstance().getRemovedSongs()) {
+            if (song.getListenByUser(user) != 0) {
+                listenedAlbums.put(song.getAlbum(), listenedAlbums.getOrDefault(song.getAlbum(), 0) + song.getListenByUser(user));
             }
         }
         output.addString("topAlbums", listenedAlbums);
@@ -82,8 +106,13 @@ public class WrappedCommand extends Command {
         HashMap<String, Integer> listenedAlbums = new HashMap<>();
         for (Album album : Library.getInstance().getAlbums()) {
             if (album.getArtist().equals(artist.getName()) && album.getListenByUser(null) != 0) {
-
                 listenedAlbums.put(album.getName(), listenedAlbums.getOrDefault(album.getName(), 0) + album.getListenByUser(null));
+            }
+        }
+
+        for (Song song: Library.getInstance().getRemovedSongs()) {
+            if (song.getArtist().equals(artist.getName()) && song.getListenByUser(null) != 0) {
+                listenedAlbums.put(song.getAlbum(), listenedAlbums.getOrDefault(song.getAlbum(), 0) + song.getListenByUser(null));
             }
         }
         output.addString("topAlbums", listenedAlbums);
@@ -98,6 +127,14 @@ public class WrappedCommand extends Command {
                 }
             }
         }
+
+        for (Song song: Library.getInstance().getRemovedSongs()) {
+            if (song.getArtist().equals(artist.getName())) {
+                if (song.getListenByUser(null) != 0) {
+                    listenedSongs.put(song.getName(), listenedSongs.getOrDefault(song.getName(), 0) + song.getListenByUser(null));
+                }
+            }
+        }
         output.addString("topSongs", listenedSongs);
 
         HashMap<Entity, Integer> fans = new HashMap<>();
@@ -106,6 +143,7 @@ public class WrappedCommand extends Command {
                 fans.put(user, artist.getListenByUser(user));
             }
         }
+
         output.addFans("topFans", fans);
 
         output.addField("listeners", fans.size());

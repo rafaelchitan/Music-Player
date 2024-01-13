@@ -35,8 +35,14 @@ public class UpdateRecommendationsCommand extends Command {
                         .filter(s -> s.getGenre().equals((activeSong.getGenre())))
                         .toList();
                 Song song = songs.get(new Random(seed).nextInt(songs.size()));
-                user.updateSongsReccomandations(song);
-                user.setLastRecommendation(song);
+                if (song != null) {
+                    user.updateSongsReccomandations(song);
+                    user.setLastRecommendation(song);
+                } else {
+                    return new CommandOutput(this,
+                            "No new recommendations were found")
+                            .convertToJSON();
+                }
             }
         } else if (recommendationType.equals("fans_playlist")
                 && user.getPlayer().getActiveFile() != null) {
@@ -66,6 +72,12 @@ public class UpdateRecommendationsCommand extends Command {
                     return s2.getLikeNumber() - s1.getLikeNumber();
                 }).toList().subList(0, Math.min(5, fan.getLikedSongs().size())));
                 playlistSongs.addAll(likedSongs);
+            }
+
+            if (playlistSongs.isEmpty()) {
+                return new CommandOutput(this,
+                        "No new recommendations were found")
+                        .convertToJSON();
             }
 
             Playlist playlist = new Playlist(artist.getName() + " Fan Club recommendations", user, timestamp);
@@ -113,6 +125,12 @@ public class UpdateRecommendationsCommand extends Command {
                 String genre = sortedGenres.get(1);
                 playlistSongs.addAll(songs.stream().filter(s -> s.getGenre().equals(genre))
                         .toList().subList(0, Math.min(2, songs.size())));
+            }
+
+            if (playlistSongs.isEmpty()) {
+                return new CommandOutput(this,
+                        "No new recommendations were found")
+                        .convertToJSON();
             }
 
             Playlist playlist = new Playlist(username + "'s recommendations", user, timestamp);

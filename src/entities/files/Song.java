@@ -99,6 +99,19 @@ public class Song extends AudioFile implements Entity {
                     }
                 }
             }
+
+            for (Song song : Library.getInstance().getRemovedSongs()) {
+                for (Pair<User, Integer> pair: song.getTimesListened()) {
+                    if (pair.a.equals(user)
+                            && pair.b <= adTimestamp.get(user)
+                            && !listenedEntries.contains(new ListenedEntry(song, user, pair.b))) {
+                        listenedSongs.put(song, listenedSongs.getOrDefault(song, 0) + 1);
+                        totalListened++;
+                        listenedEntries.add(new ListenedEntry(song, user, pair.b));
+                    }
+                }
+            }
+
             if (listenedSongs.isEmpty())
                 return;
 

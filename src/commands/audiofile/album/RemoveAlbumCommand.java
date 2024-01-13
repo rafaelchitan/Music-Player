@@ -39,7 +39,7 @@ public class RemoveAlbumCommand extends Command {
                     + " doesn't have an album with the given name.").convertToJSON();
         }
 
-        if (testActive()) {
+        if (testActive(name)) {
             return new CommandOutput(this, username
                     + " can't delete this album.").convertToJSON();
         }
@@ -53,6 +53,7 @@ public class RemoveAlbumCommand extends Command {
             }
 
             Library.getInstance().getSongs().remove(song);
+            Library.getInstance().getRemovedSongs().add(song);
         }
 
         Library.getInstance().getAlbums().remove(user.getAlbumByName(name));
@@ -65,7 +66,7 @@ public class RemoveAlbumCommand extends Command {
      * Checks if the album is active
      * @return true if the album is active, false otherwise
      */
-    private boolean testActive() {
+    private boolean testActive(String albumName) {
 
         for (User user: Library.getInstance().getUsers()) {
             if (user.getName().equals(username)) {
@@ -81,18 +82,18 @@ public class RemoveAlbumCommand extends Command {
 
             switch (currentFile.objType()) {
                 case "song":
-                    if (((Song) currentFile).getArtist().equals(username)) {
+                    if (((Song) currentFile).getAlbum().equals(albumName)) {
                         return true;
                     }
                     break;
                 case "album":
-                    if (((Album) currentFile).getArtist().equals(username)) {
+                    if (((Album) currentFile).getName().equals(albumName)) {
                         return true;
                     }
                     break;
                 case "playlist":
                     for (Song song: ((Playlist) currentFile).getSongs()) {
-                        if (song.getArtist().equals(username)) {
+                        if (song.getAlbum().equals(albumName)) {
                             return true;
                         }
                     }

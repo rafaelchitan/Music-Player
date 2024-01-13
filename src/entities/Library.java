@@ -28,6 +28,7 @@ public final class Library {
     private ArrayList<Album> albums = new ArrayList<>();
     private ArrayList<Event> events = new ArrayList<>();
     private ArrayList<ListenedEntry> listenedEntries = new ArrayList<>();
+    private ArrayList<Song> removedSongs = new ArrayList<>();
 
     @Getter
     private static Library instance = new Library();

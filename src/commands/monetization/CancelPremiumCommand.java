@@ -56,6 +56,22 @@ public class CancelPremiumCommand extends Command {
                 totalListens += listens;
             }
         }
+        for (Song song : Library.getInstance().getRemovedSongs()) {
+            int listens = 0;
+            for (Pair<User, Integer> pair : song.getPremiumTimesListened()) {
+                if (pair.a.equals(user) && !Library.getInstance().getListenedEntries().contains(new ListenedEntry(song, user, pair.b))) {
+                    Library.getInstance().getListenedEntries().add(new ListenedEntry(song, user, pair.b));
+                    listens++;
+                }
+            }
+
+            if (listens != 0) {
+                listenedArtists.put(song.getArtist(),
+                        listenedArtists.getOrDefault(song.getArtist(), 0) + listens);
+                listenedSongs.put(song, listens);
+                totalListens += listens;
+            }
+        }
 
         for (Map.Entry<Song, Integer> entry : listenedSongs.entrySet()) {
             Song song = entry.getKey();

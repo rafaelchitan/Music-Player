@@ -62,6 +62,12 @@ public class Artist extends User {
                 times += song.getListenByUser(user);
             }
         }
+
+        for (Song song : Library.getInstance().getRemovedSongs()) {
+            if (song.getArtist().equals(this.getName())) {
+                times += song.getListenByUser(user);
+            }
+        }
         return times;
     }
 }
