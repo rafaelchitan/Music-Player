@@ -11,13 +11,17 @@ import fileio.output.CommandOutput;
 public class BuyMerchCommand extends Command {
     private String name;
 
-    public BuyMerchCommand(CommandInput commandInput) {
+    public BuyMerchCommand(final CommandInput commandInput) {
         this.command = commandInput.getCommand();
         this.username = commandInput.getUsername();
         this.timestamp = commandInput.getTimestamp();
         this.name = commandInput.getName();
     }
 
+    /**
+     * Executes the BuyMerch Command and returns the result.
+     * @return JSON ObjectNode containing the result
+     */
     @Override
     public ObjectNode execute() {
         User user = Library.getInstance().getUserByName(username);

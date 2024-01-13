@@ -56,7 +56,7 @@ public class User implements Entity, Subscriber {
     protected Page likedContentPage = new LikedContentPage(this);
     protected Page currentPage = publicPage;
     protected List<Page> pageHistory = new ArrayList<>();
-    int historyIndex = -1;
+    private int historyIndex = -1;
 
     protected double songMoney = 0.0;
     protected double merchMoney = 0.0;
@@ -113,38 +113,67 @@ public class User implements Entity, Subscriber {
         return null;
     }
 
+    /**
+     * Gets the list of albums, if the user is an artist
+     * @return the list of artist's albums, null otherwise
+     */
     public List<Album> getAlbums() {
         return new ArrayList<>();
     }
 
+    /**
+     * Gets the list of podcasts, if the user is a host
+     * @return the list of host's podcasts, null otherwise
+     */
     public List<Podcast> getPodcasts() {
         return null;
     }
 
+    /**
+     * Gets an album by its name, if it exists.
+     * @param albumName the name of the album
+     * @return the album object if found, null otherwise
+     */
     public Album getAlbumByName(final String albumName) {
         return null;
     }
 
+    /**
+     * Gets the list of events, if the user is an artist
+     * @return the list of artist's events, null otherwise
+     */
     public List<Event> getEvents() {
         return null;
     }
 
+    /**
+     * Gets the event by its name, if it exists.
+     * @param eventName the name of the event
+     * @return the event object if found, null otherwise
+     */
     public Event getEventByName(final String eventName) {
         return null;
     }
 
+    /**
+     * Gets the user's name.
+     * @return the user's name
+     */
     @Override
     public String getName() {
         return username;
     }
 
+    /**
+     * Gets the user's type.
+     * @return the user's type
+     */
     @Override
     public String objType() {
         return "user";
     }
-
     @Override
-    public int getDuration(User user) {
+    public int getDuration(final User user) {
         return 0;
     }
 
@@ -156,36 +185,69 @@ public class User implements Entity, Subscriber {
         return null;
     }
 
+    /**
+     * Gets the merch by its name, if it exists.
+     * @param merchName the name of the merch
+     * @return the merch object if found, null otherwise
+     */
     public Merch getMerchByName(final String merchName) {
         return null;
     }
 
+    /**
+     * Gets the list of podcasts, if the user is a host
+     * @return the list of host's podcasts, null otherwise
+     */
     public Podcast getPodcastByName(final String podcastName) {
         return null;
     }
 
+    /**
+     * Gets the list of announcements, if the user is a host
+     * @return the list of host's announcements, null otherwise
+     */
     public List<Announcement> getAnnouncements() {
         return null;
     }
 
+    /**
+     * Gets the announcement by its name, if it exists.
+     * @param podcastName the name of the announcement
+     * @return the announcement object if found, null otherwise
+     */
     public Announcement getAnnouncementByName(final String podcastName) {
         return null;
     }
 
+    /**
+     * Add the notification to the user's notifications list.
+     */
     public void update(final NotificationTemplate notification) {
         notifications.add(notification);
     }
 
+    /**
+     * Gets the publisher for the current user
+     * @return current user's publisher
+     */
     public Publisher getPublisher() {
         return null;
     }
 
-    public void addPage(Page nextPage) {
+    /**
+     * Adds a new page to the history.
+     * @param nextPage the page to be added
+     */
+    public void addPage(final Page nextPage) {
         pageHistory.add(nextPage);
         currentPage = nextPage;
         historyIndex = pageHistory.size() - 1;
     }
 
+    /**
+     * Goes to the next page.
+     * @return true if the next page exists, false otherwise
+     */
     public boolean goNextPage() {
         if (historyIndex == pageHistory.size() - 1) {
             return false;
@@ -195,6 +257,10 @@ public class User implements Entity, Subscriber {
         return true;
     }
 
+    /**
+     * Goes to the previous page.
+     * @return true if the previous page exists, false otherwise
+     */
     public boolean goPreviousPage() {
         if (historyIndex == 0) {
             return false;
@@ -204,11 +270,19 @@ public class User implements Entity, Subscriber {
         return true;
     }
 
+    /**
+     * Updates the song reccomandations.
+     * @param song the song to be added to the reccomandations
+     */
     public void updateSongsReccomandations(final Song song) {
         ((HomePage) publicPage).getSongReccomandations().add(song);
     }
 
-    public void updatePlaylistReccomandations(Playlist playlist) {
+    /**
+     * Updates the playlist reccomandations.
+     * @param playlist the playlist to be added to the reccomandations
+     */
+    public void updatePlaylistReccomandations(final Playlist playlist) {
         ((HomePage) publicPage).getPlaylistReccomandations().add(playlist);
     }
 }

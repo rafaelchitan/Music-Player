@@ -8,17 +8,22 @@ import fileio.input.CommandInput;
 import fileio.output.CommandOutput;
 
 public class SubscribeCommand extends Command {
-    public SubscribeCommand(CommandInput commandInput) {
+    public SubscribeCommand(final CommandInput commandInput) {
         this.command = commandInput.getCommand();
         this.username = commandInput.getUsername();
         this.timestamp = commandInput.getTimestamp();
     }
 
+    /**
+     * Executes the Subscribe Command and returns the result.
+     * @return JSON ObjectNode containing the result
+     */
     @Override
     public ObjectNode execute() {
         User user = Library.getInstance().getUserByName(username);
         if (user == null) {
-            return new CommandOutput(this, "The username " + username + " doesn't exist").convertToJSON();
+            return new CommandOutput(this,
+                    "The username " + username + " doesn't exist").convertToJSON();
         }
 
         User pageUser = user.getCurrentPage().getUser();

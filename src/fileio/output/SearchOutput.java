@@ -21,12 +21,12 @@ public class SearchOutput extends CommandOutput {
         this.user = command.getUsername();
         this.results = new ArrayList<>();
 
-        for (int i = 0; i < Constants.MAX_SEARCH_RESULTS && i < results.size(); i++) {
+        for (int i = 0; i < Constants.MAX_COUNT && i < results.size(); i++) {
             this.results.add(results.get(i).getName());
         }
 
         this.message = "Search returned "
-                + Math.min(results.size(), Constants.MAX_SEARCH_RESULTS) + " results";
+                + Math.min(results.size(), Constants.MAX_COUNT) + " results";
     }
 
     public SearchOutput(final Command command, final String message) {

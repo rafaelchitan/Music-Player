@@ -7,6 +7,7 @@ import fileio.input.SongInput;
 import lombok.Getter;
 import lombok.Setter;
 import org.antlr.v4.runtime.misc.Pair;
+import utils.Constants;
 import utils.ListenedEntry;
 
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ public class Song extends AudioFile implements Entity {
     private int releaseYear;
     private String artist;
     private int likeNumber = 0;
-    private double money = 0;
+    private Double money = 0.0;
     private HashSet<Pair<User, Integer>> timesListened = new HashSet<>();
     private HashSet<Pair<User, Integer>> premiumTimesListened = new HashSet<>();
     private HashSet<User> hasAdBreak = new HashSet<>();
@@ -42,47 +43,81 @@ public class Song extends AudioFile implements Entity {
     }
 
     /**
+     * Gets the type of the object.
      * @return the type of the object.
      */
     public String objType() {
         return "song";
     }
 
-    public void addListened(User user, int timestamp) {
+    /**
+     * Adds a new listen to the song.
+     * @param user the user that listened to the song
+     * @param timestamp the timestamp of the listen
+     */
+    public void addListened(final User user, final int timestamp) {
         timesListened.add(new Pair<>(user, timestamp));
     }
 
-    public void premiumAddListened(User user, int timestamp) {
+    /**
+     * Adds a new listen to the song, monetized as premium.
+     * @param user the user that listened to the song
+     * @param timestamp the timestamp of the listen
+     */
+    public void premiumAddListened(final User user, final int timestamp) {
         premiumTimesListened.add(new Pair<>(user, timestamp));
     }
 
-    public int getListenByUser(User user) {
-        if (user == null)
+    /**
+     * Gets the number of times the song was listened by the given user.
+     * @param user the user to check the number of listens for
+     * @return the number of times the song was listened by the given user
+     */
+    public int getListenByUser(final User user) {
+        if (user == null) {
             return timesListened.size();
+        }
 
         return (int) timesListened.stream()
                 .filter(pair -> pair.a.equals(user))
                 .count();
     }
 
-    public int getPremiumListenByUser(User user) {
-        if (user == null)
+    /**
+     * Gets the number of times the song was listened by the given user, monetized as premium.
+     * @param user the user to check the number of listens for
+     * @return the number of times the song was listened by the given user, monetized as premium
+     */
+    public int getPremiumListenByUser(final User user) {
+        if (user == null) {
             return premiumTimesListened.size();
+        }
 
         return (int) premiumTimesListened.stream()
                 .filter(pair -> pair.a.equals(user))
                 .count();
     }
 
+    /**
+     * Gets the duration of the song, with the ad break if the user has it.
+     * @param user the user to check the ad break for
+     * @return the duration of the song, with the ad break if the user has it
+     */
     @Override
-    public int getDuration(User user) {
-        if (hasAdBreak.contains(user))
-            return duration + 10;
+    public int getDuration(final User user) {
+        if (hasAdBreak.contains(user)) {
+            return duration + Constants.AD_BREAK_DURATION;
+        }
         return duration;
     }
 
+    /**
+     * Check if the song contains an ad break for the given user and monetize
+     * all the songs from the last ad break
+     * @param user the user to check the ad break for
+     */
     @Override
-    public void pass(User user) {
+    public void pass(final User user) {
         if (hasAdBreak.contains(user) && !markedAdBreaks.contains(user)) {
             markedAdBreaks.add(user);
             HashMap<Song, Integer> listenedSongs = new HashMap<>();
@@ -112,16 +147,19 @@ public class Song extends AudioFile implements Entity {
                 }
             }
 
-            if (listenedSongs.isEmpty())
+            if (listenedSongs.isEmpty()) {
                 return;
+            }
 
             int price = adPrice.get(user);
             for (Song song : listenedSongs.keySet()) {
-                song.setMoney(song.getMoney() + (double) price / totalListened * listenedSongs.get(song));
-                User artist = Library.getInstance().getUserByName(song.getArtist());
-                artist.setSongMoney(artist.getSongMoney() + (double) price / totalListened * listenedSongs.get(song));
-            }
+                song.setMoney(song.getMoney()
+                        + (double) price / totalListened * listenedSongs.get(song));
 
+                User monetizedArtist = Library.getInstance().getUserByName(song.getArtist());
+                monetizedArtist.setSongMoney(monetizedArtist.getSongMoney()
+                        + (double) price / totalListened * listenedSongs.get(song));
+            }
 
         }
     }

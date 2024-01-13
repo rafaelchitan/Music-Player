@@ -12,6 +12,10 @@ public class NotificationTemplate {
         this.description = description;
     }
 
+    /**
+     * Converts the notification to a JSON ObjectNode.
+     * @return JSON ObjectNode containing the notification
+     */
     public ObjectNode toJSON() {
         ObjectNode notification = new ObjectMapper().createObjectNode();
         notification.put("name", name);

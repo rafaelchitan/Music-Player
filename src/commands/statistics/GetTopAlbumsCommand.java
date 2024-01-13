@@ -43,6 +43,6 @@ public class GetTopAlbumsCommand extends Command {
         }).toList();
 
         return new StatisticsOutput(this, new ArrayList<>(albums.subList(0,
-                Math.min(albums.size(), Constants.MAX_SEARCH_RESULTS)))).convertToJSON();
+                Math.min(albums.size(), Constants.MAX_COUNT)))).convertToJSON();
     }
 }

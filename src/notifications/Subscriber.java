@@ -1,6 +1,10 @@
 package notifications;
 
 public interface Subscriber {
-    public void update(final NotificationTemplate notification);
 
+    /**
+     * Updates the subscriber with a new notification.
+     * @param notification the notification to be added to the list
+     */
+    void update(NotificationTemplate notification);
 }

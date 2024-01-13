@@ -7,17 +7,19 @@ import entities.users.User;
 import fileio.input.CommandInput;
 import fileio.output.NotificationsOutput;
 import notifications.NotificationTemplate;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class GetNotificationsCommand extends Command {
-    public GetNotificationsCommand(CommandInput commandInput) {
+    public GetNotificationsCommand(final CommandInput commandInput) {
         this.command = commandInput.getCommand();
         this.username = commandInput.getUsername();
         this.timestamp = commandInput.getTimestamp();
     }
 
+    /**
+     * Executes the GetNotifications Command and returns the result.
+     * @return JSON ObjectNode containing the result
+     */
     @Override
     public ObjectNode execute() {
         User user = Library.getInstance().getUserByName(username);

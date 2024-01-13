@@ -15,7 +15,8 @@ import java.util.List;
 public class NotificationsOutput extends CommandOutput {
     private List<NotificationTemplate> results;
 
-    public NotificationsOutput(final Command command, final ArrayList<NotificationTemplate> results) {
+    public NotificationsOutput(final Command command,
+                               final ArrayList<NotificationTemplate> results) {
         this.command = command.getCommand();
         this.timestamp = command.getTimestamp();
         this.user = command.getUsername();

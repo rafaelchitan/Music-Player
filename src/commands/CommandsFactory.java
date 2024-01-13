@@ -21,13 +21,36 @@ import commands.pages.ChangePageCommand;
 import commands.pages.NextPageCommand;
 import commands.pages.PreviousPageCommand;
 import commands.pages.PrintCurrentPageCommand;
-import commands.player.*;
+import commands.player.LoadCommand;
+import commands.player.NextPrevCommand;
+import commands.player.PlayPauseCommand;
+import commands.player.RepeatCommand;
+import commands.player.ShuffleCommand;
+import commands.player.StatusCommand;
+import commands.player.LikeCommand;
+import commands.player.ForwardBackwardCommand;
+import commands.player.LoadRecommendationsCommand;
 import commands.recommandations.UpdateRecommendationsCommand;
 import commands.searchbar.Search;
 import commands.searchbar.Select;
-import commands.statistics.*;
+import commands.statistics.GetTopAlbumsCommand;
+import commands.statistics.GetTopArtistsCommand;
+import commands.statistics.GetTopPlaylistsCommand;
+import commands.statistics.GetTopSongsCommand;
+import commands.statistics.ShowPrefferedSongsCommand;
 import commands.statistics.listen.WrappedCommand;
-import commands.user.*;
+import commands.user.AddUserCommand;
+import commands.user.DeleteUserCommand;
+import commands.user.ErrorUserCommand;
+import commands.user.GetOnlineUsersCommand;
+import commands.user.GetAllUsersCommand;
+import commands.user.SeeMerchCommand;
+import commands.user.SwitchConnectionStatusCommand;
+import commands.user.AddEventCommand;
+import commands.user.AddMerchCommand;
+import commands.user.AddAnnouncementCommand;
+import commands.user.RemoveAnnouncementCommand;
+import commands.user.RemoveEventCommand;
 import entities.Library;
 import fileio.input.CommandInput;
 import lombok.Getter;
@@ -35,11 +58,16 @@ import lombok.Getter;
 public final class CommandsFactory {
 
     @Getter
-    private static final CommandsFactory instance = new CommandsFactory();
+    private static CommandsFactory instance = new CommandsFactory();
 
     private CommandsFactory() {
     }
 
+    /**
+     * Creates a command based on the command input.
+     * @param command the given command input
+     * @return the command that will be executed
+     */
     public Command createCommand(final CommandInput command) {
 
         if (command.getCommand().equals("addUser")) {

@@ -5,23 +5,25 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import commands.Command;
 import commands.monetization.CancelPremiumCommand;
 import entities.Library;
-import entities.files.AudioFile;
-import entities.files.Podcast;
 import entities.files.Song;
 import entities.users.User;
+import utils.Constants;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 
 public class EndProgramCommand extends Command {
     public EndProgramCommand() {
     }
 
+    /**
+     * Executes the EndProgram Command and returns the result.
+     * @return JSON ObjectNode containing the result
+     */
     public ObjectNode execute() {
         for (User user : Library.getInstance().getUsers()) {
             if (user.isPremium()) {
-                new CancelPremiumCommand(user.getName(), timestamp).execute();
+                new CancelPremiumCommand(user.getName()).execute();
             }
         }
 
@@ -49,23 +51,26 @@ public class EndProgramCommand extends Command {
             if (Library.getInstance().getUserByName(s2).getSongMoney()
                     + Library.getInstance().getUserByName(s2).getMerchMoney()
                     - Library.getInstance().getUserByName(s1).getSongMoney()
-                    - Library.getInstance().getUserByName(s1).getMerchMoney() > 0)
+                    - Library.getInstance().getUserByName(s1).getMerchMoney() > 0) {
                 return 1;
-            else if (Library.getInstance().getUserByName(s2).getSongMoney()
+            } else if (Library.getInstance().getUserByName(s2).getSongMoney()
                     + Library.getInstance().getUserByName(s2).getMerchMoney()
                     - Library.getInstance().getUserByName(s1).getSongMoney()
-                    - Library.getInstance().getUserByName(s1).getMerchMoney() < 0)
+                    - Library.getInstance().getUserByName(s1).getMerchMoney() < 0) {
                 return -1;
-            else
+            } else {
                 return s1.compareTo(s2);
+            }
         });
 
         for (String artist: sorted) {
             User user = Library.getInstance().getUserByName(artist);
 
             ObjectNode artistNode = new ObjectMapper().createObjectNode();
-            artistNode.put("merchRevenue", Math.round(user.getMerchMoney() * 100.0) / 100.0);
-            artistNode.put("songRevenue", Math.round(user.getSongMoney() * 100.0) / 100.0);
+            artistNode.put("merchRevenue", user.getMerchMoney());
+            artistNode.put("songRevenue",
+                    Math.round(user.getSongMoney() * Constants.PRINT_FORMAT)
+                            / Constants.PRINT_FORMAT);
             artistNode.put("ranking", ++rank);
 
             ArrayList<Song> songs = new ArrayList<>(Library.getInstance().getSongs().stream()
@@ -93,20 +98,6 @@ public class EndProgramCommand extends Command {
             artistNode.put("mostProfitableSong", mostProfitableSong);
             objectNode.set(artist, artistNode);
         }
-
-//        for (Artist artist : Library.getInstance().getUsers().stream()
-//                .filter(u -> u.getType().equals("artist"))
-//                .toArray(Artist[]::new)) {
-//            if (artist.getListenByUser(null) != 0) {
-//                ObjectNode artistNode = new ObjectMapper().createObjectNode();
-//                artistNode.put("songRevenue", Math.round(0 * 100.0) / 100.0);
-//                artistNode.put("merchRevenue", Math.round(0 * 100.0) / 100.0);
-//                artistNode.put("ranking", ++rank);
-//                artistNode.put("mostProfitableSong", "N/A");
-//
-//                objectNode.set(artist.getName(), artistNode);
-//            }
-//        }
 
         ObjectNode output = new ObjectMapper().createObjectNode();
         output.put("command", "endProgram");

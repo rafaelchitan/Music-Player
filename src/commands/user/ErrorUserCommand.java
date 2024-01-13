@@ -25,6 +25,7 @@ public class ErrorUserCommand extends Command {
      */
     @Override
     public ObjectNode execute() {
-        return new ErrorOutput(this, "The username " + username + " doesn't exist.").convertToJSON();
+        return new ErrorOutput(this,
+                "The username " + username + " doesn't exist.").convertToJSON();
     }
 }

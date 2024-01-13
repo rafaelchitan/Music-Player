@@ -356,7 +356,8 @@ public class Search extends Command {
         if (searchFilter.getName() != null) {
             result = new ArrayList<>(Library.getInstance().getUsers().stream()
                     .filter(artist -> artist.getType().equals("artist"))
-                    .filter(artist -> artist.getUsername().toLowerCase().startsWith(searchFilter.getName().toLowerCase()))
+                    .filter(artist -> artist.getUsername()
+                            .toLowerCase().startsWith(searchFilter.getName().toLowerCase()))
                     .toList());
         }
 

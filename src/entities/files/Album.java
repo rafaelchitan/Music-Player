@@ -6,7 +6,6 @@ import entities.users.User;
 import fileio.input.SongInput;
 import lombok.Getter;
 import lombok.Setter;
-import org.antlr.v4.runtime.misc.Pair;
 
 import java.util.ArrayList;
 
@@ -42,39 +41,31 @@ public class Album implements Entity {
         return "album";
     }
 
-    public int getListenByUser(User user) {
+    /**
+     * Gets the number of times the user has listened to the album.
+     * @param user the user to check the number of listens for
+     * @return the number of times the user has listened to the album
+     */
+    public int getListenByUser(final User user) {
         int times = 0;
-
-//        if (user == null) {
-//            for (Song song : songs) {
-//                for (Song librarySong : Library.getInstance().getSongs().stream()
-//                        .filter(s -> s.getName().equals(song.getName()))
-//                        .filter(s -> s.getArtist().equals(song.getArtist()))
-//                        .toList()) {
-//                    times += librarySong.getListenByUser(null);
-//                }
-//            }
-//            return times;
-//        }
-
         for (Song song : songs) {
-//            for (Song librarySong : Library.getInstance().getSongs().stream()
-//                    .filter(s -> s.getName().equals(song.getName()))
-//                    .filter(s -> s.getArtist().equals(song.getArtist()))
-//                    .toList()) {
-//                times += librarySong.getListenByUser(user);
-//            }
             times += song.getListenByUser(user);
         }
 
         return times;
     }
 
-    public int getDuration(User user) {
+    /**
+     * Gets the duration of the album.
+     * @param user the user to check the duration for
+     * @return the duration of the album
+     */
+    public int getDuration(final User user) {
         int duration = 0;
         for (Song song: songs) {
             duration += song.getDuration(user);
         }
+
         return duration;
     }
 }

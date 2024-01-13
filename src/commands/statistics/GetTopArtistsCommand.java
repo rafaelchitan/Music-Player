@@ -51,6 +51,6 @@ public class GetTopArtistsCommand extends Command {
         }).toList();
 
         return new StatisticsOutput(this, new ArrayList<>(artists.subList(0,
-                        Math.min(artists.size(), Constants.MAX_SEARCH_RESULTS)))).convertToJSON();
+                        Math.min(artists.size(), Constants.MAX_COUNT)))).convertToJSON();
     }
 }

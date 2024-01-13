@@ -29,14 +29,16 @@ public class AddUserCommand extends Command {
      */
     @Override
     public ObjectNode execute() {
-        if (Library.getInstance().getUserByName(username) != null && !Library.getInstance().getUserByName(username).isFake()) {
+        if (Library.getInstance().getUserByName(username) != null
+                && !Library.getInstance().getUserByName(username).isFake()) {
             return new CommandOutput(this, "The username "
                     + username
                     + " is already taken.")
                     .convertToJSON();
         }
-        if (Library.getInstance().getUserByName(username) != null)
+        if (Library.getInstance().getUserByName(username) != null) {
             Library.getInstance().getUsers().remove(Library.getInstance().getUserByName(username));
+        }
 
         if (type.equals("artist")) {
             Library.getInstance().getUsers().add(new Artist(username, age, city, type));

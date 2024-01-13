@@ -31,6 +31,11 @@ public class Artist extends User {
         isFake = true;
     }
 
+    /**
+     * Gets the album with the given name, if it exists.
+     * @param albumName the name of the album
+     * @return the album with the given name
+     */
     @Override
     public Album getAlbumByName(final String albumName) {
         return albums.stream()
@@ -39,6 +44,11 @@ public class Artist extends User {
                 .orElse(null);
     }
 
+    /**
+     * Gets the event with the given name, if it exists.
+     * @param eventName the name of the event
+     * @return the event with the given name
+     */
     @Override
     public Event getEventByName(final String eventName) {
         return events.stream()
@@ -47,6 +57,11 @@ public class Artist extends User {
                 .orElse(null);
     }
 
+    /**
+     * Gets the merchandise with the given name, if it exists.
+     * @param merchName the name of the merchandise
+     * @return the merchandise with the given name
+     */
     @Override
     public Merch getMerchByName(final String merchName) {
         return merch.stream()
@@ -55,7 +70,12 @@ public class Artist extends User {
                 .orElse(null);
     }
 
-    public int getListenByUser(User user) {
+    /**
+     * Calculates the number of times the artist's songs were listened by the given user.
+     * @param user the user to calculate the number of listens for
+     * @return the number of times the artist's songs were listened by the given user
+     */
+    public int getListenByUser(final User user) {
         int times = 0;
         for (Song song : Library.getInstance().getSongs()) {
             if (song.getArtist().equals(this.getName())) {

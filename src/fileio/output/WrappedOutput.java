@@ -6,9 +6,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import commands.Command;
 import entities.Entity;
 import entities.Library;
-import entities.files.Album;
-import entities.files.AudioFile;
-import entities.files.Song;
+import utils.Constants;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,7 +22,13 @@ public class WrappedOutput extends CommandOutput {
         this.objectNode = new ObjectMapper().createObjectNode();
     }
 
-    public WrappedOutput addObject(String type, HashMap<Entity, Integer> top) {
+    /**
+     * Adds a new field to the JSON object, containing the top 5 entities from a top.
+     * @param type the type of output that will be displayed in the JSON
+     * @param top the hashmap containing the top objects
+     * @return an instance of the current object, with updated fields
+     */
+    public WrappedOutput addObject(final String type, final HashMap<Entity, Integer> top) {
         ArrayList<Entity> sorted = new ArrayList<>(top.keySet());
         sorted.sort((s1, s2) -> {
             if (top.get(s1).equals(top.get(s2))) {
@@ -33,16 +37,23 @@ public class WrappedOutput extends CommandOutput {
             return top.get(s2) - top.get(s1);
         });
 
-        ObjectNode objectNode = new ObjectMapper().createObjectNode();
-        for (Entity result: sorted.subList(0, Math.min(5, sorted.size()))) {
-            objectNode.put(result.getName(), top.get(result));
+        ObjectNode node = new ObjectMapper().createObjectNode();
+        for (Entity result
+                : sorted.subList(0, Math.min(Constants.MAX_COUNT, sorted.size()))) {
+            node.put(result.getName(), top.get(result));
             noData = false;
         }
-        this.objectNode.set(type, objectNode);
+        objectNode.set(type, node);
         return this;
     }
 
-    public WrappedOutput addString(String type, HashMap<String, Integer> top) {
+    /**
+     * Adds a new field to the JSON object, containing the top 5 strings from a top.
+     * @param type the type of output that will be displayed in the JSON
+     * @param top the hashmap containing the top objects
+     * @return an instance of the current object, with updated fields
+     */
+    public WrappedOutput addString(final String type, final HashMap<String, Integer> top) {
         ArrayList<String> sorted = new ArrayList<>(top.keySet());
         sorted.sort((s1, s2) -> {
             if (top.get(s1).equals(top.get(s2))) {
@@ -51,12 +62,13 @@ public class WrappedOutput extends CommandOutput {
             return top.get(s2) - top.get(s1);
         });
 
-        ObjectNode objectNode = new ObjectMapper().createObjectNode();
-        for (String result: sorted.subList(0, Math.min(5, sorted.size()))) {
-            objectNode.put(result, top.get(result));
+        ObjectNode node = new ObjectMapper().createObjectNode();
+        for (String result
+                : sorted.subList(0, Math.min(Constants.MAX_COUNT, sorted.size()))) {
+            node.put(result, top.get(result));
             noData = false;
         }
-        this.objectNode.set(type, objectNode);
+        objectNode.set(type, node);
         return this;
     }
 
@@ -66,26 +78,40 @@ public class WrappedOutput extends CommandOutput {
      */
     @Override
     public ObjectNode convertToJSON() {
-        ObjectNode objectNode = new ObjectMapper().createObjectNode();
-        objectNode.put("command", this.command);
+        ObjectNode node = new ObjectMapper().createObjectNode();
+        node.put("command", this.command);
         if (user != null) {
-            objectNode.put("user", this.user);
+            node.put("user", this.user);
         }
-        objectNode.put("timestamp", this.timestamp);
+        node.put("timestamp", this.timestamp);
         if (noData) {
-            objectNode.put("message", "No data to show for " + Library.getInstance().getUserByName(user).getType() + " " + user + ".");
-            return objectNode;
+            node.put("message", "No data to show for "
+                    + Library.getInstance().getUserByName(user).getType()
+                    + " " + user + ".");
+            return node;
         }
-        objectNode.set("result", this.objectNode);
-        return objectNode;
+        node.set("result", this.objectNode);
+        return node;
     }
 
-    public WrappedOutput addField(String type, int value) {
+    /**
+     * Adds a new field to the JSON object, containing a string.
+     * @param type the type of output that will be displayed in the JSON
+     * @param value the value string that will be displayed in the JSON
+     * @return an instance of the current object, with updated fields
+     */
+    public WrappedOutput addField(final String type, final int value) {
         objectNode.put(type, value);
         return this;
     }
 
-    public WrappedOutput addFans(String type, HashMap<Entity, Integer> top) {
+    /**
+     * Adds a new field to the JSON object, containing a string and the top 5 fans.
+     * @param type the type of output that will be displayed in the JSON
+     * @param top the hashmap containing the top objects
+     * @return an instance of the current object, with updated fields
+     */
+    public WrappedOutput addFans(final String type, final HashMap<Entity, Integer> top) {
         ArrayList<Entity> sorted = new ArrayList<>(top.keySet());
         sorted.sort((s1, s2) -> {
             if (top.get(s1).equals(top.get(s2))) {
@@ -95,7 +121,8 @@ public class WrappedOutput extends CommandOutput {
         });
 
         ArrayNode arrayNode = new ObjectMapper().createArrayNode();
-        for (Entity result: sorted.subList(0, Math.min(5, sorted.size()))) {
+        for (Entity
+                result: sorted.subList(0, Math.min(Constants.MAX_COUNT, sorted.size()))) {
             arrayNode.add(result.getName());
         }
 

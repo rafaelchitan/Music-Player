@@ -66,7 +66,7 @@ public class RemoveAlbumCommand extends Command {
      * Checks if the album is active
      * @return true if the album is active, false otherwise
      */
-    private boolean testActive(String albumName) {
+    private boolean testActive(final String albumName) {
 
         for (User user: Library.getInstance().getUsers()) {
             if (user.getName().equals(username)) {

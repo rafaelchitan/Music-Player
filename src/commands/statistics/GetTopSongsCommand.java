@@ -27,9 +27,9 @@ public class GetTopSongsCommand extends Command {
         ArrayList<Song> topSongs = new ArrayList<>(songs);
         topSongs.sort((o1, o2) -> o2.getLikeNumber() - o1.getLikeNumber());
 
-        if (topSongs.size() > Constants.MAX_SEARCH_RESULTS) {
+        if (topSongs.size() > Constants.MAX_COUNT) {
             ArrayList<Entity> topResults = new ArrayList<>(topSongs
-                    .subList(0, Constants.MAX_SEARCH_RESULTS));
+                    .subList(0, Constants.MAX_COUNT));
             return new StatisticsOutput(this, topResults).convertToJSON();
         }
         return new StatisticsOutput(this, new ArrayList<>(topSongs)).convertToJSON();

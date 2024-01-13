@@ -7,9 +7,6 @@ import commands.Command;
 import entities.users.specifics.Merch;
 import lombok.Getter;
 import lombok.Setter;
-import notifications.NotificationTemplate;
-
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter @Setter

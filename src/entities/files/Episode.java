@@ -21,17 +21,28 @@ public class Episode extends AudioFile implements Entity {
     }
 
     /**
+     * Gets the type of the object.
      * @return the type of the object.
      */
     public String objType() {
         return "episode";
     }
 
-    public void addListened(User user, int timestamp) {
+    /**
+     * Adds a new listen to the episode.
+     * @param user the user that listened to the episode
+     * @param timestamp the timestamp of the listen
+     */
+    public void addListened(final User user, final int timestamp) {
         timesListened.add(new Pair<>(user, timestamp));
     }
 
-    public int getListenByUser(User user) {
+    /**
+     * Gets the number of times the user has listened to the episode.
+     * @param user the user to check the number of listens for
+     * @return the number of times the user has listened to the episode
+     */
+    public int getListenByUser(final User user) {
         int times = 0;
         for (Pair<User, Integer> pair : timesListened) {
             if (pair.a.equals(user) || user == null) {
@@ -41,7 +52,12 @@ public class Episode extends AudioFile implements Entity {
         return times;
     }
 
-    public int getDuration(User user) {
+    /**
+     * Gets the duration of the episode.
+     * @param user the user to check the duration for
+     * @return the duration of the episode
+     */
+    public int getDuration(final User user) {
         return duration;
     }
 }

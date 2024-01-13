@@ -10,11 +10,8 @@ import commands.Command;
 import commands.CommandsFactory;
 import commands.statistics.EndProgramCommand;
 import entities.Library;
-import entities.files.Song;
-import entities.users.User;
 import fileio.input.CommandInput;
 import fileio.input.LibraryInput;
-import org.antlr.v4.runtime.misc.Pair;
 
 import java.io.File;
 import java.io.IOException;
@@ -83,13 +80,10 @@ public final class Main {
 
         ArrayNode outputs = objectMapper.createArrayNode();
 
-        // TODO add your implementation
-
         Library library = Library.getInstance();
         library.updateLibrary(libraryInput);
 
         File inputFile = new File(CheckerConstants.TESTS_PATH + filePathInput);
-        System.out.println(filePathInput);
         CommandInput[] commandInput = objectMapper.readValue(inputFile, CommandInput[].class);
         for (CommandInput command : commandInput) {
 

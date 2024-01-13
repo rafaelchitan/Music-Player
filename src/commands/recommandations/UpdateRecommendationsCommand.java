@@ -2,7 +2,6 @@ package commands.recommandations;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import commands.Command;
-import entities.Entity;
 import entities.Library;
 import entities.files.Playlist;
 import entities.files.Song;
@@ -10,18 +9,27 @@ import entities.users.Artist;
 import entities.users.User;
 import fileio.input.CommandInput;
 import fileio.output.CommandOutput;
+import utils.Constants;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Random;
 
 public class UpdateRecommendationsCommand extends Command {
-    private String recommendationType;
-    public UpdateRecommendationsCommand(CommandInput commandInput) {
+    private final String recommendationType;
+    public UpdateRecommendationsCommand(final CommandInput commandInput) {
         this.command = commandInput.getCommand();
         this.timestamp = commandInput.getTimestamp();
         this.username = commandInput.getUsername();
         this.recommendationType = commandInput.getRecommendationType();
     }
 
+    /**
+     * Executes the UpdateRecommendations Command and returns the result.
+     * @return JSON ObjectNode containing the result
+     */
     public ObjectNode execute() {
         User user = Library.getInstance().getUserByName(username);
         user.getPlayer().update(user, timestamp);
@@ -63,14 +71,15 @@ public class UpdateRecommendationsCommand extends Command {
                 }
                 return fans.get(s2) - fans.get(s1);
             });
-            sortedFans = new ArrayList<>(sortedFans.subList(0, Math.min(5, sortedFans.size())));
+            sortedFans = new ArrayList<>(sortedFans.subList(0,
+                    Math.min(Constants.MAX_COUNT, sortedFans.size())));
             HashSet<Song> playlistSongs = new HashSet<>();
 
             for (User fan: sortedFans) {
                 List<Song> likedSongs = new ArrayList<>(fan.getLikedSongs().stream()
-                        .sorted((s1, s2) -> {
-                    return s2.getLikeNumber() - s1.getLikeNumber();
-                }).toList().subList(0, Math.min(5, fan.getLikedSongs().size())));
+                        .sorted((s1, s2) -> s2.getLikeNumber() - s1.getLikeNumber())
+                        .toList()
+                        .subList(0, Math.min(Constants.MAX_COUNT, fan.getLikedSongs().size())));
                 playlistSongs.addAll(likedSongs);
             }
 
@@ -80,7 +89,8 @@ public class UpdateRecommendationsCommand extends Command {
                         .convertToJSON();
             }
 
-            Playlist playlist = new Playlist(artist.getName() + " Fan Club recommendations", user, timestamp);
+            Playlist playlist = new Playlist(artist.getName()
+                    + " Fan Club recommendations", user, timestamp);
             playlist.getSongs().addAll(playlistSongs);
             user.updatePlaylistReccomandations(playlist);
             user.setLastRecommendation(playlist);
@@ -95,9 +105,9 @@ public class UpdateRecommendationsCommand extends Command {
             for (Playlist playlist : user.getFollowedPlaylists()) {
                 songs.addAll(playlist.getSongs());
             }
-            songs = new HashSet<>(songs.stream().sorted((s1, s2) -> {
-                return s2.getLikeNumber() - s1.getLikeNumber();
-            }).toList());
+            songs = new HashSet<>(songs.stream()
+                    .sorted((s1, s2) -> s2.getLikeNumber() - s1.getLikeNumber())
+                    .toList());
 
             HashMap<String, Integer> genres = new HashMap<>();
             for (Song song : songs) {
@@ -111,14 +121,15 @@ public class UpdateRecommendationsCommand extends Command {
                 }
                 return genres.get(s2) - genres.get(s1);
             });
-            sortedGenres = new ArrayList<>(sortedGenres.subList(0, Math.min(3, sortedGenres.size())));
+            sortedGenres = new ArrayList<>(sortedGenres.subList(0,
+                    Math.min(Constants.GENRE_COUNT, sortedGenres.size())));
 
             HashSet<Song> playlistSongs = new HashSet<>();
 
             if (sortedGenres.size() > 0) {
                 String genre = sortedGenres.get(0);
                 playlistSongs.addAll(songs.stream().filter(s -> s.getGenre().equals(genre))
-                        .toList().subList(0, Math.min(5, songs.size())));
+                        .toList().subList(0, Math.min(Constants.MAX_COUNT, songs.size())));
             }
 
             if (sortedGenres.size() > 1) {

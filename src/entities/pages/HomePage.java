@@ -33,7 +33,7 @@ public class HomePage extends Page {
         likedSongs = new ArrayList<>(user.getLikedSongs());
         likedSongs.sort(Comparator.comparingInt(Song::getLikeNumber).reversed());
         likedSongs = new ArrayList<>(likedSongs
-                .subList(0, Math.min(Constants.MAX_SEARCH_RESULTS, likedSongs.size())));
+                .subList(0, Math.min(Constants.MAX_COUNT, likedSongs.size())));
 
         followedPlaylists = user.getFollowedPlaylists();
         followedPlaylists.sort((p1, p2) -> {
@@ -49,7 +49,7 @@ public class HomePage extends Page {
             return p2Likes - p1Likes;
         });
         followedPlaylists = new ArrayList<>(followedPlaylists
-                .subList(0, Math.min(Constants.MAX_SEARCH_RESULTS, followedPlaylists.size())));
+                .subList(0, Math.min(Constants.MAX_COUNT, followedPlaylists.size())));
     }
 
     /**

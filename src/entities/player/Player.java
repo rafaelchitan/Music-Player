@@ -1,7 +1,6 @@
 package entities.player;
 
 import entities.Entity;
-import entities.Library;
 import entities.files.Album;
 import entities.files.AudioFile;
 import entities.files.Episode;
@@ -12,8 +11,6 @@ import entities.users.User;
 import lombok.Getter;
 import lombok.Setter;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 
 @Setter @Getter
 public class Player {
@@ -184,6 +181,12 @@ public class Player {
         return currentTimestamp - current;
     }
 
+    /**
+     * Sets an ad break for the current song.
+     * @param user the user to set the ad break for
+     * @param price the price of the ad break
+     * @param timestamp the timestamp of the ad break
+     */
     public void setAdBreak(User user, int price, int timestamp) {
         if (activeFile.objType().equals("song")) {
             ((Song) activeFile).getAdPrice().put(user, price);

@@ -58,14 +58,24 @@ public class Podcast implements Entity {
         return "podcast";
     }
 
-    public int getListenByUser(User user) {
+    /**
+     * Gets the number of times the user has listened to the podcast.
+     * @param user the user to check the number of listens for
+     * @return the number of times the user has listened to the podcast
+     */
+    public int getListenByUser(final User user) {
         return episodes.stream()
                 .min(Comparator.comparingInt(e -> e.getListenByUser(user)))
                 .get()
                 .getListenByUser(user);
     }
 
-    public int getDuration(User user) {
+    /**
+     * Gets the duration of the podcast.
+     * @param user the user to check the duration for
+     * @return the duration of the podcast
+     */
+    public int getDuration(final User user) {
         return duration;
     }
 

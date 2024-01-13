@@ -4,84 +4,110 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import commands.Command;
 import entities.Entity;
 import entities.Library;
-import entities.files.*;
+import entities.files.Album;
+import entities.files.Episode;
+import entities.files.Podcast;
+import entities.files.Song;
 import entities.users.Artist;
 import entities.users.Host;
 import entities.users.User;
 import fileio.input.CommandInput;
 import fileio.output.WrappedOutput;
-import org.antlr.v4.runtime.misc.Pair;
-
 import java.util.HashMap;
 
 public class WrappedCommand extends Command {
 
-    public WrappedCommand(CommandInput command) {
+    public WrappedCommand(final CommandInput command) {
         this.command = command.getCommand();
         this.timestamp = command.getTimestamp();
         this.username = command.getUsername();
     }
 
-    public ObjectNode executeUser(User user) {
+    /**
+     * Executes the wrapped command for a basic user.
+     * @return the JSON representation of the output
+     */
+    public ObjectNode executeUser(final User user) {
         user.getPlayer().update(user, timestamp);
         WrappedOutput output = new WrappedOutput(this);
 
+        // Get the top listened artists
         HashMap<String, Integer> listenedArtists = new HashMap<>();
         for (Song song : Library.getInstance().getSongs()) {
             if (song.getListenByUser(user) != 0) {
-                listenedArtists.put(song.getArtist(), listenedArtists.getOrDefault(song.getArtist(), 0) + song.getListenByUser(user));
+                listenedArtists.put(song.getArtist(),
+                        listenedArtists.getOrDefault(song.getArtist(), 0)
+                                + song.getListenByUser(user));
             }
         }
 
+        // Get the top listened genres
         for (Song song: Library.getInstance().getRemovedSongs()) {
             if (song.getListenByUser(user) != 0) {
-                listenedArtists.put(song.getArtist(), listenedArtists.getOrDefault(song.getArtist(), 0) + song.getListenByUser(user));
+                listenedArtists.put(song.getArtist(),
+                        listenedArtists.getOrDefault(song.getArtist(), 0)
+                                + song.getListenByUser(user));
             }
         }
-        output.addString("topArtists", listenedArtists);
 
+        // Get the top listened genres
         HashMap<String, Integer> listenedGenres = new HashMap<>();
         for (Song song : Library.getInstance().getSongs()) {
             if (song.getListenByUser(user) != 0) {
-                listenedGenres.put(song.getGenre(), listenedGenres.getOrDefault(song.getGenre(), 0) + song.getListenByUser(user));
+                listenedGenres.put(song.getGenre(),
+                        listenedGenres.getOrDefault(song.getGenre(), 0)
+                                + song.getListenByUser(user));
             }
         }
 
+        // Get the top listened genres
         for (Song song: Library.getInstance().getRemovedSongs()) {
             if (song.getListenByUser(user) != 0) {
-                listenedGenres.put(song.getGenre(), listenedGenres.getOrDefault(song.getGenre(), 0) + song.getListenByUser(user));
+                listenedGenres.put(song.getGenre(),
+                        listenedGenres.getOrDefault(song.getGenre(), 0)
+                                + song.getListenByUser(user));
             }
         }
-        output.addString("topGenres", listenedGenres);
 
+        // Get the top listened songs from existing songs
         HashMap<String, Integer> listenedSongs = new HashMap<>();
         for (Song song : Library.getInstance().getSongs()) {
             if (song.getListenByUser(user) != 0) {
-                listenedSongs.put(song.getName(), listenedSongs.getOrDefault(song.getName(), 0) + song.getListenByUser(user));
+                listenedSongs.put(song.getName(),
+                        listenedSongs.getOrDefault(song.getName(), 0)
+                                + song.getListenByUser(user));
             }
         }
 
+        // Get the top listened songs from removed songs
         for (Song song: Library.getInstance().getRemovedSongs()) {
             if (song.getListenByUser(user) != 0) {
-                listenedSongs.put(song.getName(), listenedSongs.getOrDefault(song.getName(), 0) + song.getListenByUser(user));
+                listenedSongs.put(song.getName(),
+                        listenedSongs.getOrDefault(song.getName(), 0)
+                                + song.getListenByUser(user));
             }
         }
-        output.addString("topSongs", listenedSongs);
 
+        // Get the top listened albums from existing albums
         HashMap<String, Integer> listenedAlbums = new HashMap<>();
         for (Album album : Library.getInstance().getAlbums()) {
             if (album.getListenByUser(user) != 0) {
-                listenedAlbums.put(album.getName(), listenedAlbums.getOrDefault(album.getName(), 0) + album.getListenByUser(user));
+                listenedAlbums.put(album.getName(),
+                        listenedAlbums.getOrDefault(album.getName(), 0)
+                                + album.getListenByUser(user));
             }
         }
 
+        // Get the top listened albums from removed albums
         for (Song song: Library.getInstance().getRemovedSongs()) {
             if (song.getListenByUser(user) != 0) {
-                listenedAlbums.put(song.getAlbum(), listenedAlbums.getOrDefault(song.getAlbum(), 0) + song.getListenByUser(user));
+                listenedAlbums.put(song.getAlbum(),
+                        listenedAlbums.getOrDefault(song.getAlbum(), 0)
+                                + song.getListenByUser(user));
             }
         }
-        output.addString("topAlbums", listenedAlbums);
 
+        // Get the top listened episodes
         HashMap<Entity, Integer> listenedEpisodes = new HashMap<>();
         for (Podcast podcast : Library.getInstance().getPodcasts()) {
             for (Episode episode : podcast.getEpisodes()) {
@@ -90,12 +116,22 @@ public class WrappedCommand extends Command {
                 }
             }
         }
-        output.addObject("topEpisodes", listenedEpisodes);
 
-        return output.convertToJSON();
+        return output
+                .addString("topArtists", listenedArtists)
+                .addString("topGenres", listenedGenres)
+                .addString("topSongs", listenedSongs)
+                .addString("topAlbums", listenedAlbums)
+                .addObject("topEpisodes", listenedEpisodes)
+                .convertToJSON();
     }
 
-    public ObjectNode executeArtist(Artist artist) {
+    /**
+     * Executes the wrapped command for an artist.
+     * @param artist the artist that executes the command
+     * @return the JSON representation of the output
+     */
+    public ObjectNode executeArtist(final Artist artist) {
         for (User user : Library.getInstance().getUsers().stream()
                 .filter(u -> u.getType().equals("user"))
                 .toArray(User[]::new)) {
@@ -103,40 +139,51 @@ public class WrappedCommand extends Command {
         }
         WrappedOutput output = new WrappedOutput(this);
 
+        // Get the top listened albums from existing albums
         HashMap<String, Integer> listenedAlbums = new HashMap<>();
         for (Album album : Library.getInstance().getAlbums()) {
             if (album.getArtist().equals(artist.getName()) && album.getListenByUser(null) != 0) {
-                listenedAlbums.put(album.getName(), listenedAlbums.getOrDefault(album.getName(), 0) + album.getListenByUser(null));
+                listenedAlbums.put(album.getName(),
+                        listenedAlbums.getOrDefault(album.getName(), 0)
+                                + album.getListenByUser(null));
             }
         }
 
+        // Get the top listened albums from removed albums
         for (Song song: Library.getInstance().getRemovedSongs()) {
             if (song.getArtist().equals(artist.getName()) && song.getListenByUser(null) != 0) {
-                listenedAlbums.put(song.getAlbum(), listenedAlbums.getOrDefault(song.getAlbum(), 0) + song.getListenByUser(null));
+                listenedAlbums.put(song.getAlbum(),
+                        listenedAlbums.getOrDefault(song.getAlbum(), 0)
+                                + song.getListenByUser(null));
             }
         }
-        output.addString("topAlbums", listenedAlbums);
 
+        // Get the top listened songs from existing songs
         HashMap<String, Integer> listenedSongs = new HashMap<>();
         for (Album album : Library.getInstance().getAlbums()) {
             if (album.getArtist().equals(artist.getName())) {
                 for (Song song : album.getSongs()) {
                     if (song.getListenByUser(null) != 0) {
-                        listenedSongs.put(song.getName(), listenedSongs.getOrDefault(song.getName(), 0) + song.getListenByUser(null));
+                        listenedSongs.put(song.getName(),
+                                listenedSongs.getOrDefault(song.getName(), 0)
+                                        + song.getListenByUser(null));
                     }
                 }
             }
         }
 
+        // Get the top listened songs from removed songs
         for (Song song: Library.getInstance().getRemovedSongs()) {
             if (song.getArtist().equals(artist.getName())) {
                 if (song.getListenByUser(null) != 0) {
-                    listenedSongs.put(song.getName(), listenedSongs.getOrDefault(song.getName(), 0) + song.getListenByUser(null));
+                    listenedSongs.put(song.getName(),
+                            listenedSongs.getOrDefault(song.getName(), 0)
+                                    + song.getListenByUser(null));
                 }
             }
         }
-        output.addString("topSongs", listenedSongs);
 
+        // Get the top listened fans
         HashMap<Entity, Integer> fans = new HashMap<>();
         for (User user : Library.getInstance().getUsers()) {
             if (user.getType().equals("user") && artist.getListenByUser(user) != 0) {
@@ -144,14 +191,20 @@ public class WrappedCommand extends Command {
             }
         }
 
-        output.addFans("topFans", fans);
-
-        output.addField("listeners", fans.size());
-
-        return output.convertToJSON();
+        return output
+                .addString("topAlbums", listenedAlbums)
+                .addString("topSongs", listenedSongs)
+                .addFans("topFans", fans)
+                .addField("listeners", fans.size())
+                .convertToJSON();
     }
 
-    public ObjectNode executeHost(Host host) {
+    /**
+     * Executes the wrapped command for a host.
+     * @param host the host that executes the command
+     * @return the JSON representation of the output
+     */
+    public ObjectNode executeHost(final Host host) {
         for (User user : Library.getInstance().getUsers().stream()
                 .filter(u -> u.getType().equals("user"))
                 .toArray(User[]::new)) {
@@ -159,6 +212,7 @@ public class WrappedCommand extends Command {
         }
         WrappedOutput output = new WrappedOutput(this);
 
+        // Get the top listened episodes
         HashMap<String, Integer> listenedEpisodes = new HashMap<>();
         for (Podcast podcast : Library.getInstance().getPodcasts()) {
             if (podcast.getOwner().equals(host.getName())) {
@@ -171,19 +225,25 @@ public class WrappedCommand extends Command {
                 }
             }
         }
-        output.addString("topEpisodes", listenedEpisodes);
 
+        // Get the number of listeners
         int listeners = 0;
         for (User user : Library.getInstance().getUsers()) {
             if (user.getType().equals("user") && host.getListenByUser(user) != 0) {
                 listeners++;
             }
         }
-        output.addField("listeners", listeners);
 
-        return output.convertToJSON();
+        return output
+                .addString("topEpisodes", listenedEpisodes)
+                .addField("listeners", listeners)
+                .convertToJSON();
     }
 
+    /**
+     * Executes the wrapped command.
+     * @return the JSON representation of the output
+     */
     @Override
     public ObjectNode execute() {
         User user = Library.getInstance().getUserByName(username);

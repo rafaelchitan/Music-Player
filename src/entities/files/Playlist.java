@@ -20,6 +20,7 @@ public class Playlist implements Entity {
     }
 
     /**
+     * Gets the current filetype
      * @return the type of the object.
      */
     public String objType() {
@@ -27,9 +28,10 @@ public class Playlist implements Entity {
     }
 
     /**
+     * Gets the duration of the playlist.
      * @return the total duration of the playlist.
      */
-    public int getDuration(User user) {
+    public int getDuration(final User user) {
         int duration = 0;
         for (Song song: songs) {
             duration += song.getDuration(user);

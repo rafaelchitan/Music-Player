@@ -2,7 +2,6 @@ package entities.users;
 
 import entities.Library;
 import entities.files.Episode;
-import entities.files.Song;
 import entities.users.specifics.Announcement;
 import entities.files.Podcast;
 import entities.pages.HostPage;
@@ -25,6 +24,11 @@ public class Host extends User {
         publicPage = new HostPage(this);
     }
 
+    /**
+     * Gets the podcast with the given name, if it exists.
+     * @param podcastName the name of the podcast
+     * @return the podcast with the given name
+     */
     @Override
     public Podcast getPodcastByName(final String podcastName) {
         return podcasts.stream()
@@ -33,6 +37,11 @@ public class Host extends User {
                 .orElse(null);
     }
 
+    /**
+     * Gets the announcement with the given name, if it exists.
+     * @param announcementName the name of the announcement
+     * @return the announcement with the given name
+     */
     public Announcement getAnnouncementByName(final String announcementName) {
         return announcements.stream()
                 .filter(podcast -> podcast.getName().equals(announcementName))
@@ -40,7 +49,12 @@ public class Host extends User {
                 .orElse(null);
     }
 
-    public int getListenByUser(User user) {
+    /**
+     * Gets the number of times the user has listened to the host.
+     * @param user the user to check the number of listens for
+     * @return the number of times the user has listened to the host
+     */
+    public int getListenByUser(final User user) {
         int times = 0;
         for (Podcast podcast : Library.getInstance().getPodcasts()) {
             if (podcast.getOwner().equals(this.getName())) {

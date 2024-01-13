@@ -32,9 +32,9 @@ public class GetTopPlaylistsCommand extends Command {
             return o2.getFollowers() - o1.getFollowers();
         });
 
-        if (topPlaylists.size() > Constants.MAX_SEARCH_RESULTS) {
+        if (topPlaylists.size() > Constants.MAX_COUNT) {
             ArrayList<Entity> topResults = new ArrayList<>(topPlaylists
-                    .subList(0, Constants.MAX_SEARCH_RESULTS));
+                    .subList(0, Constants.MAX_COUNT));
             return new StatisticsOutput(this, topResults).convertToJSON();
         }
         return new StatisticsOutput(this, new ArrayList<>(topPlaylists)).convertToJSON();
