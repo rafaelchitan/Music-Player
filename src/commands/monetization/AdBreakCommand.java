@@ -8,10 +8,12 @@ import fileio.input.CommandInput;
 import fileio.output.CommandOutput;
 
 public class AdBreakCommand extends Command {
+    int price;
     public AdBreakCommand(CommandInput commandInput) {
         this.command = commandInput.getCommand();
         this.username = commandInput.getUsername();
         this.timestamp = commandInput.getTimestamp();
+        this.price = commandInput.getPrice();
     }
 
     public ObjectNode execute() {
@@ -22,11 +24,10 @@ public class AdBreakCommand extends Command {
 
         user.getPlayer().update(user, timestamp);
         if (user.getPlayer().getPlayStatus() == null || !user.getPlayer().getPlayStatus().equals("playing")) {
-            return new CommandOutput(this, username + "is not playing any music.").convertToJSON();
+            return new CommandOutput(this, username + " is not playing any music.").convertToJSON();
         }
 
-        user.getPlayer().setAdBreak();
-
+        user.getPlayer().setAdBreak(user, price, timestamp);
         return new CommandOutput(this, "Ad inserted successfully.").convertToJSON();
     }
 }

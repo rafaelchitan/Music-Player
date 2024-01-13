@@ -40,4 +40,8 @@ public class Episode extends AudioFile implements Entity {
         }
         return times;
     }
+
+    public int getDuration(User user) {
+        return duration;
+    }
 }

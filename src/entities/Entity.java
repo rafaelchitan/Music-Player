@@ -1,5 +1,7 @@
 package entities;
 
+import entities.users.User;
+
 public interface Entity {
     /**
      * @return the name of the object
@@ -13,5 +15,5 @@ public interface Entity {
     /**
      * @return the duration of the specific filetype
      */
-    int getDuration();
+    int getDuration(User user);
 }

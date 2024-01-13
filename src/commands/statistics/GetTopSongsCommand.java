@@ -3,7 +3,7 @@ package commands.statistics;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import commands.Command;
 import entities.Entity;
-import constants.Constants;
+import utils.Constants;
 import entities.Library;
 import entities.files.Song;
 import fileio.input.CommandInput;

@@ -29,10 +29,10 @@ public class Playlist implements Entity {
     /**
      * @return the total duration of the playlist.
      */
-    public int getDuration() {
+    public int getDuration(User user) {
         int duration = 0;
         for (Song song: songs) {
-            duration += song.getDuration();
+            duration += song.getDuration(user);
         }
         return duration;
     }

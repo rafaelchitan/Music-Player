@@ -144,7 +144,7 @@ public class User implements Entity, Subscriber {
     }
 
     @Override
-    public int getDuration() {
+    public int getDuration(User user) {
         return 0;
     }
 

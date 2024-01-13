@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+
 @Getter @Setter
 public class Podcast implements Entity {
     private String name;
@@ -25,7 +27,7 @@ public class Podcast implements Entity {
         }
         duration = 0;
         for (Episode episode : episodes) {
-            duration += episode.getDuration();
+            duration += episode.getDuration(null);
         }
     }
 
@@ -42,7 +44,7 @@ public class Podcast implements Entity {
 
         duration = 0;
         for (Episode episode : episodes) {
-            duration += episode.getDuration();
+            duration += episode.getDuration(null);
         }
 
         Library.getInstance().getPodcasts().add(this);
@@ -56,11 +58,15 @@ public class Podcast implements Entity {
         return "podcast";
     }
 
-public int getListenByUser(User user) {
+    public int getListenByUser(User user) {
         return episodes.stream()
-                .min((e1, e2) -> e1.getListenByUser(user) - e2.getListenByUser(user))
+                .min(Comparator.comparingInt(e -> e.getListenByUser(user)))
                 .get()
                 .getListenByUser(user);
+    }
+
+    public int getDuration(User user) {
+        return duration;
     }
 
 }

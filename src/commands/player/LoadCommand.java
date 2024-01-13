@@ -41,7 +41,7 @@ public class LoadCommand extends Command {
             user.getPlayer().update(user, timestamp);
         }
         user.getPlayer().getStats().setName(user.getSelectedFile().getName());
-        user.getPlayer().getStats().setRemainedTime(user.getSelectedFile().getDuration());
+        user.getPlayer().getStats().setRemainedTime(user.getSelectedFile().getDuration(user));
 
         user.setSelectedFile(null);
         return new LoadOutput(this, "Playback loaded successfully.").convertToJSON();

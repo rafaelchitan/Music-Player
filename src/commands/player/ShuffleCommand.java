@@ -59,7 +59,7 @@ public class ShuffleCommand extends Command {
 
         ObjectNode returnMessage;
         Player player = user.getPlayer();
-        int songTimestamp = player.getCurrentElapsedTime();
+        int songTimestamp = player.getCurrentElapsedTime(user);
 
         if (!user.getPlayer().getStats().isShuffle()) {
             shuffleArray(player.getQueueIndexes());
@@ -86,7 +86,7 @@ public class ShuffleCommand extends Command {
         int currentTimestamp = 0;
         for (int i = 0; i < player.getQueueIndex(); i++) {
             int index = player.getQueueIndexes().get(i);
-            currentTimestamp += player.getQueue().get(index).getDuration();
+            currentTimestamp += player.getQueue().get(index).getDuration(user);
         }
         currentTimestamp += songTimestamp;
         player.setCurrentTimestamp(currentTimestamp);

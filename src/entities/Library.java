@@ -13,7 +13,11 @@ import fileio.input.SongInput;
 import fileio.input.UserInput;
 import lombok.Getter;
 import lombok.Setter;
+import utils.ListenedEntry;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 
 @Getter @Setter
 public final class Library {
@@ -23,6 +27,7 @@ public final class Library {
     private ArrayList<Playlist> publicPlaylists = new ArrayList<>();
     private ArrayList<Album> albums = new ArrayList<>();
     private ArrayList<Event> events = new ArrayList<>();
+    private ArrayList<ListenedEntry> listenedEntries = new ArrayList<>();
 
     @Getter
     private static Library instance = new Library();

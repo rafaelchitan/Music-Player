@@ -5,11 +5,13 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import commands.Command;
 import commands.monetization.CancelPremiumCommand;
 import entities.Library;
+import entities.files.AudioFile;
 import entities.files.Podcast;
 import entities.files.Song;
 import entities.users.User;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 
 public class EndProgramCommand extends Command {
@@ -67,21 +69,28 @@ public class EndProgramCommand extends Command {
             artistNode.put("ranking", ++rank);
 
             ArrayList<Song> songs = new ArrayList<>(Library.getInstance().getSongs().stream()
-                    .filter(s -> s.getArtist().equals(artist))
-                    .sorted((s1, s2) -> {
-                        if (s2.getMoney() - s1.getMoney() > 0)
-                            return 1;
-                        else if (s2.getMoney() - s1.getMoney() < 0)
-                            return -1;
-                        else
-                            return 0;
-                    })
-                    .toList());
-            if (songs.size() != 0 && songs.get(0).getMoney() != 0)
-                artistNode.put("mostProfitableSong", songs.get(0).getName());
-            else
-                artistNode.put("mostProfitableSong", "N/A");
+                    .filter(s -> s.getArtist().equals(artist)).toList());
+            HashMap<String, Double> profitSongs = new HashMap<>();
 
+            for (Song song: songs) {
+                profitSongs.put(song.getName(), profitSongs.getOrDefault(song.getName(), 0.0)
+                        + song.getMoney());
+            }
+
+            String mostProfitableSong = "N/A";
+            double mostProfit = 0.0;
+            for (String song: profitSongs.keySet()) {
+                if (profitSongs.get(song) > mostProfit) {
+                    mostProfit = profitSongs.get(song);
+                    mostProfitableSong = song;
+                } else if (profitSongs.get(song) == mostProfit && mostProfit != 0.0) {
+                    if (song.compareTo(mostProfitableSong) < 0) {
+                        mostProfitableSong = song;
+                    }
+                }
+            }
+
+            artistNode.put("mostProfitableSong", mostProfitableSong);
             objectNode.set(artist, artistNode);
         }
 

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import commands.Command;
 import entities.Entity;
-import constants.Constants;
+import utils.Constants;
 import lombok.Getter;
 import lombok.Setter;
 

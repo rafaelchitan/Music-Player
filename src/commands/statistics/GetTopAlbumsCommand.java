@@ -2,7 +2,7 @@ package commands.statistics;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import commands.Command;
-import constants.Constants;
+import utils.Constants;
 import entities.files.Album;
 import entities.Library;
 import entities.files.Song;

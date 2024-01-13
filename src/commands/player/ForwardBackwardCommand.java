@@ -2,18 +2,20 @@ package commands.player;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import commands.Command;
-import constants.Constants;
+import utils.Constants;
 import entities.Library;
 import entities.player.Player;
+import entities.users.User;
 import fileio.input.CommandInput;
 import fileio.output.CommandOutput;
 
 public class ForwardBackwardCommand extends Command {
+    private final User user;
     public ForwardBackwardCommand(final CommandInput commandInput) {
         this.command = commandInput.getCommand();
-
         this.timestamp = commandInput.getTimestamp();
         this.username = commandInput.getUsername();
+        user = Library.getInstance().getUserByName(username);
     }
 
     /**
@@ -49,9 +51,9 @@ public class ForwardBackwardCommand extends Command {
      */
     public ObjectNode backward() {
         Player player = Library.getInstance().getUserByName(username).getPlayer();
-        if (player.getCurrentElapsedTime() < Constants.BACKWARD_DURATION) {
+        if (player.getCurrentElapsedTime(user) < Constants.BACKWARD_DURATION) {
             player.setCurrentTimestamp(player.getCurrentTimestamp()
-                    - player.getCurrentElapsedTime());
+                    - player.getCurrentElapsedTime(user));
         } else {
             player.setCurrentTimestamp(player.getCurrentTimestamp() - Constants.BACKWARD_DURATION);
         }
@@ -65,11 +67,11 @@ public class ForwardBackwardCommand extends Command {
 
     public ObjectNode forward() {
         Player player = Library.getInstance().getUserByName(username).getPlayer();
-        if (player.getActiveFile().getDuration() - player.getCurrentElapsedTime()
+        if (player.getActiveFile().getDuration(user) - player.getCurrentElapsedTime(user)
                 < Constants.FORWARD_DURATION) {
             player.setCurrentTimestamp(player.getCurrentTimestamp()
-                    + player.getActiveFile().getDuration()
-                    - player.getCurrentElapsedTime());
+                    + player.getActiveFile().getDuration(user)
+                    - player.getCurrentElapsedTime(user));
         } else {
             player.setCurrentTimestamp(player.getCurrentTimestamp() + Constants.FORWARD_DURATION);
         }

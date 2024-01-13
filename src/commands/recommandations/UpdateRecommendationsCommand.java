@@ -28,7 +28,7 @@ public class UpdateRecommendationsCommand extends Command {
 
         if (recommendationType.equals("random_song")) {
             if (user.getPlayer().getStats().getRemainedTime() > 0) {
-                int seed = user.getPlayer().getActiveFile().getDuration()
+                int seed = user.getPlayer().getActiveFile().getDuration(user)
                         - user.getPlayer().getStats().getRemainedTime();
                 Song activeSong = (Song) user.getPlayer().getActiveFile();
                 List<Song> songs = Library.getInstance().getSongs().stream()

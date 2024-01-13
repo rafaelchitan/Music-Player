@@ -7,8 +7,8 @@ import org.antlr.v4.runtime.misc.Pair;
 
 import java.util.HashSet;
 
-@Getter @Setter
 public abstract class AudioFile {
+    @Getter @Setter
     protected String name;
     protected int duration;
 
@@ -32,4 +32,8 @@ public abstract class AudioFile {
     public int getPremiumListenByUser(User user) {
         return 0;
     }
+
+    public abstract int getDuration(User user);
+
+    public void pass(User user) { }
 }

@@ -26,17 +26,12 @@ public class Player {
     private ArrayList<Integer> queueIndexes = new ArrayList<>();
 
     private AudioFile activeFile;
-    private AudioFile songBeforeBreak;
     private ArrayList<AudioFile> queue = new ArrayList<>();
     private int queueIndex = 0;
 
     private int currentTimestamp;
-    private int queueDuration;
-
     private int repeatThis = 0;
     private int repeatAllCount = 0;
-
-    boolean hasAd = false;
 
     public Player() {
     }
@@ -50,33 +45,28 @@ public class Player {
         this.currentTimestamp = currentTimestamp;
         this.initialTimestamp = startTimestamp;
         this.currentFile = currentFile;
-        queueDuration = 0;
         int qMaxIndex = 0;
         switch (currentFile.objType()) {
             case "song":
                 queueIndexes.add(qMaxIndex++);
                 queue.add((Song) currentFile);
-                queueDuration = currentFile.getDuration();
                 break;
             case "podcast":
                 for (Episode episode : ((Podcast) currentFile).getEpisodes()) {
                     queue.add(episode);
                     queueIndexes.add(qMaxIndex++);
-                    queueDuration += episode.getDuration();
                 }
                 break;
             case "playlist":
                 for (Song song : ((Playlist) currentFile).getSongs()) {
                     queue.add(song);
                     queueIndexes.add(qMaxIndex++);
-                    queueDuration += song.getDuration();
                 }
                 break;
             case "album":
                 for (Song song : ((Album) currentFile).getSongs()) {
                     queue.add(song);
                     queueIndexes.add(qMaxIndex++);
-                    queueDuration += song.getDuration();
                 }
             default:
                 break;
@@ -113,19 +103,23 @@ public class Player {
                     audioFile.premiumAddListened(user, initialTimestamp + currentDuration);
                 }
 
-                currentDuration += audioFile.getDuration();
-                addedDuration += audioFile.getDuration();
+                currentDuration += audioFile.getDuration(user);
+                addedDuration += audioFile.getDuration(user);
 
                 if (currentDuration > currentTimestamp) {
                     activeFile = audioFile;
                     stats.setRemainedTime(currentDuration - currentTimestamp);
                     stats.setName(audioFile.getName());
                     queueIndex = i;
+                    if (currentDuration - currentTimestamp <= 10) {
+                        activeFile.pass(user);
+                    }
                     break;
                 } else {
+                    audioFile.pass(user);
                     if (repeatThis > 0 && i == queueIndex) {
-                        startTimestamp += audioFile.getDuration();
-                        added += audioFile.getDuration();
+                        startTimestamp += audioFile.getDuration(user);
+                        added += audioFile.getDuration(user);
                         i--;
                         repeatThis--;
                         if (repeatThis == 0) {
@@ -167,7 +161,6 @@ public class Player {
         startTimestamp = 0;
         currentFile = null;
         currentTimestamp = 0;
-        queueDuration = 0;
         activeFile = null;
         queue.clear();
         stats.reset();
@@ -180,20 +173,22 @@ public class Player {
      * Calculates the total time from the initial state of the current player.
      * @return the total "playing" time from the last load
      */
-    public int getCurrentElapsedTime() {
+    public int getCurrentElapsedTime(User user) {
         if (currentFile == null) {
             return 0;
         }
         int current = 0;
         for (int i = 0; i < queueIndex; i++) {
-            current += queue.get(queueIndexes.get(i)).getDuration();
+            current += queue.get(queueIndexes.get(i)).getDuration(user);
         }
         return currentTimestamp - current;
     }
 
-    public void setAdBreak() {
-        Song adBreak = Library.getInstance().getSongByName("adBreak");
-        songBeforeBreak = activeFile;
-        hasAd = true;
+    public void setAdBreak(User user, int price, int timestamp) {
+        if (activeFile.objType().equals("song")) {
+            ((Song) activeFile).getAdPrice().put(user, price);
+            ((Song) activeFile).getAdTimestamp().put(user, timestamp);
+            ((Song) activeFile).getHasAdBreak().add(user);
+        }
     }
 }

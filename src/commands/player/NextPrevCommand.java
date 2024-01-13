@@ -5,15 +5,17 @@ import commands.Command;
 import entities.files.AudioFile;
 import entities.Library;
 import entities.player.Player;
+import entities.users.User;
 import fileio.input.CommandInput;
 import fileio.output.CommandOutput;
 
 public class NextPrevCommand extends Command {
+    private final User user;
     public NextPrevCommand(final CommandInput commandInput) {
         this.command = commandInput.getCommand();
-
         this.timestamp = commandInput.getTimestamp();
         this.username = commandInput.getUsername();
+        user = Library.getInstance().getUserByName(username);
     }
 
     /**
@@ -77,8 +79,8 @@ public class NextPrevCommand extends Command {
         int index = player.getQueueIndex() + 1;
         AudioFile nextFile = player.getQueue().get(player.getQueueIndexes().get(index));
         player.setCurrentTimestamp(player.getCurrentTimestamp()
-                + player.getActiveFile().getDuration()
-                - player.getCurrentElapsedTime());
+                + player.getActiveFile().getDuration(user)
+                - player.getCurrentElapsedTime(user));
         player.setActiveFile(nextFile);
         player.setQueueIndex(player.getQueueIndex() + 1);
         return new CommandOutput(this,
@@ -94,14 +96,14 @@ public class NextPrevCommand extends Command {
         Player player = Library.getInstance().getUserByName(username).getPlayer();
         player.setPlayStatus("playing");
         player.getStats().setPaused(false);
-        if (player.getCurrentElapsedTime() >= 1) {
+        if (player.getCurrentElapsedTime(user) >= 1) {
             player.setCurrentTimestamp(player.getCurrentTimestamp()
-                    - player.getCurrentElapsedTime());
+                    - player.getCurrentElapsedTime(user));
             player.setStartTimestamp(timestamp);
         } else {
             if (player.getQueueIndex() == 0) {
                 player.setCurrentTimestamp(player.getCurrentTimestamp()
-                        - player.getCurrentElapsedTime());
+                        - player.getCurrentElapsedTime(user));
                 return new CommandOutput(this,
                         "Returned to previous track successfully. The current track is "
                                 + player.getActiveFile().getName() + ".").convertToJSON();
@@ -109,7 +111,7 @@ public class NextPrevCommand extends Command {
             player.setQueueIndex(player.getQueueIndex() - 1);
             int index = player.getQueueIndex();
             AudioFile prevFile = player.getQueue().get(player.getQueueIndexes().get(index));
-            player.setCurrentTimestamp(player.getCurrentTimestamp() - prevFile.getDuration());
+            player.setCurrentTimestamp(player.getCurrentTimestamp() - prevFile.getDuration(user));
             player.setActiveFile(prevFile);
         }
         return new CommandOutput(this,

@@ -17,7 +17,6 @@ public class Album implements Entity {
     private String description;
     private ArrayList<Song> songs;
     private int releaseYear;
-    private int duration;
 
     public Album(final String name, final String artist, final int releaseYear,
                  final String description, final ArrayList<SongInput> songInputs) {
@@ -69,5 +68,13 @@ public class Album implements Entity {
         }
 
         return times;
+    }
+
+    public int getDuration(User user) {
+        int duration = 0;
+        for (Song song: songs) {
+            duration += song.getDuration(user);
+        }
+        return duration;
     }
 }

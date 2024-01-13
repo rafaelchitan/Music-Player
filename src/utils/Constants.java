@@ -1,4 +1,4 @@
-package constants;
+package utils;
 
 public final class Constants {
     public static final int FORWARD_DURATION = 90;

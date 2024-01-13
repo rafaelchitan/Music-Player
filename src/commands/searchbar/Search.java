@@ -329,6 +329,12 @@ public class Search extends Command {
         Player player = Library.getInstance().getUserByName(username).getPlayer();
         player.update(Library.getInstance().getUserByName(username), timestamp);
         player.reset();
+
+        for (Song song: Library.getInstance().getSongs()) {
+            song.getHasAdBreak().remove(Library.getInstance().getUserByName(username));
+            song.getMarkedAdBreaks().remove(Library.getInstance().getUserByName(username));
+        }
+
         List<Entity> result = switch (type) {
             case "song" -> searchSong(filter);
             case "podcast" -> searchPodcast(filter);

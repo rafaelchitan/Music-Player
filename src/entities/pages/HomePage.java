@@ -1,6 +1,6 @@
 package entities.pages;
 
-import constants.Constants;
+import utils.Constants;
 import entities.files.Playlist;
 import entities.files.Song;
 import entities.users.User;

@@ -26,12 +26,11 @@ public class LoadRecommendationsCommand extends Command {
             return new LoadOutput(this,
                     "No recommendations available.").convertToJSON();
         }
-
         user.setPlayer(new Player(timestamp, user.getLastRecommendation(), 0));
 
         user.getPlayer().update(user, timestamp);
         user.getPlayer().getStats().setName(user.getLastRecommendation().getName());
-        user.getPlayer().getStats().setRemainedTime(user.getLastRecommendation().getDuration());
+        user.getPlayer().getStats().setRemainedTime(user.getLastRecommendation().getDuration(user));
 
         user.setSelectedFile(null);
         return new LoadOutput(this, "Playback loaded successfully.").convertToJSON();
